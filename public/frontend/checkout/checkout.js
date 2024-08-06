@@ -1,18 +1,129 @@
 import Main from '../main.js';
 import QuickView from '../quickView.js';
 import Header from '../header.js';
+import Cart from '../cart.js';
 
 class Checkout {
 
+  checkoutForm;
+  checkoutCart;
+  checkoutCartContainer;
+  checkoutFieldsContainer;
+
   constructor() {
 
+    this.checkoutCart = Cart.getCart();
+    this.checkoutCartContainer = document.querySelector('#checkout-cart-container');
+    this.checkoutForm = document.querySelector('#checkoutForm');
+    this.checkoutFieldsContainer = document.querySelector('#checkout-fields-container');
 
+    this.renderCheckoutCart();
     this.initCheckoutEventListeners();
   }
 
   initCheckoutEventListeners() {
+
+    this.checkoutCartContainer.addEventListener('click', this.handleCheckoutCartContainerClick.bind(this));
+
+    this.checkoutForm.addEventListener('submit', this.handleCheckoutFormSubmit.bind(this));
+
     this.initFormSubmitHandle();
     this.initCCfields();
+  }
+
+
+  handleCheckoutCartContainerClick(e) {
+    if (e.target.closest('.btn-checkout-delete-cart-item')) {
+      this.deleteCheckoutCartItem(e);
+      return;
+    }
+  }
+
+  async handleCheckoutFormSubmit(e) {
+    e.preventDefault();
+
+    if (this.checkoutCart.length == 0) {
+
+      Main.renderMessage(this.checkoutFieldsContainer, true, `You can't checkout because you don't have any products..`, 'beforeend');
+
+      setTimeout(() => Main.renderMessage(this.checkoutFieldsContainer, false), 1500);
+
+    }
+
+    const formData = new FormData(this.checkoutForm);
+    const form = Object.fromEntries(formData.entries());
+
+    this.checkoutCart = Cart.getCart();
+    form.cart = this.checkoutCart;
+
+    console.log(form);
+    await this.sendOrder(form);
+  }
+
+
+  async sendOrder(order) {
+
+
+
+  }
+
+
+  deleteCheckoutCartItem(e) {
+    const row = e.target.closest('tr');
+    const productId = row.getAttribute('data-product-id');
+    const quantity = row.getAttribute('data-product-quantity');
+    const size = row.getAttribute('data-product-size');
+
+    this.checkoutCart = Cart.getCart();
+    const newCart = this.checkoutCart.filter(item => !(item._id === productId && item.size === size));
+
+    Cart.updateCart(newCart);
+    this.renderCheckoutCart();
+
+  }
+
+  renderCheckoutCart() {
+
+    const table = this.checkoutCartContainer.querySelector('tbody');
+    table.innerHTML = '';
+
+    // getting latest cart data
+    this.checkoutCart = Cart.getCart();
+
+    if (this.checkoutCart.length == 0) {
+      table.parentElement.insertAdjacentHTML('beforebegin', `<p class="lean">Your cart is empty..</p>`);
+      this.checkoutCartContainer.querySelector('.cart-total').innerText = `$0.00`;
+      this.checkoutCartContainer.querySelector('.badge').innerText = this.checkoutCart.length;
+
+      return;
+    }
+
+    // this.cartModal.querySelector('.modal-footer > span').classList.add('hidden');
+    let total = 0;
+    this.checkoutCart.forEach(item => {
+
+      table.insertAdjacentHTML('beforeend', `
+
+          <tr data-product-id="${item._id}" data-product-quantity="${item.quantity}" data-product-size="${item.size}">
+                <td><img src="${item.img}" class="img-fluid" alt="${item.title}"
+                              style="width: 50px; height: auto;"></td>
+                         <td style="font-size:0.85rem;">${item.title}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.price}</td>
+                                <td>${item.size}</td>
+                                <td><button type="button" class="btn btn-outline-danger btn-sm btn-checkout-delete-cart-item">&times;</button></td>
+                      </tr>`);
+
+      total += item.price * item.quantity;
+    })
+
+    const formattedTotal = total.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+    this.checkoutCartContainer.parentElement.querySelector('.cart-total').innerText = formattedTotal;
+
+
   }
 
   initFormSubmitHandle() {
