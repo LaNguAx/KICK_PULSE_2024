@@ -63,9 +63,6 @@ class Checkout {
 
   async sendOrder(order) {
 
-    // this.feedbackMessage.classList.toggle('hidden');
-    // Main.renderSpinner(this.feedbackMessage, true);
-
     try {
       const response = await fetch(`/api/orders/`, {
         method: 'POST',
@@ -112,12 +109,11 @@ class Checkout {
 
     // getting latest cart data
     this.checkoutCart = Cart.getCart();
+    this.checkoutCartContainer.querySelector('.badge').innerText = this.checkoutCart.length;
 
     if (this.checkoutCart.length == 0) {
       table.parentElement.insertAdjacentHTML('beforebegin', `<p class="lean">Your cart is empty..</p>`);
       this.checkoutCartContainer.querySelector('.cart-total').innerText = `$0.00`;
-      this.checkoutCartContainer.querySelector('.badge').innerText = this.checkoutCart.length;
-
       return;
     }
 
