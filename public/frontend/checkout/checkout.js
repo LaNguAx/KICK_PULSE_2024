@@ -47,7 +47,7 @@ class Checkout {
       Main.renderMessage(this.checkoutFieldsContainer, true, `You can't checkout because you don't have any products..`, 'beforeend');
 
       setTimeout(() => Main.renderMessage(this.checkoutFieldsContainer, false), 1500);
-
+      return;
     }
 
     const formData = new FormData(this.checkoutForm);
@@ -63,8 +63,31 @@ class Checkout {
 
   async sendOrder(order) {
 
+    // this.feedbackMessage.classList.toggle('hidden');
+    // Main.renderSpinner(this.feedbackMessage, true);
 
+    try {
+      const response = await fetch(`/api/orders/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(order),
+      });
 
+      if (!response.ok) throw new Error('Failed getting response');
+      await response.json();
+
+      // this.renderSpinner(this.feedbackMessage, false);
+      // this.showMessage('Successfully added brand!');
+
+      // this.formAddBrand.reset();
+
+    } catch (error) {
+      console.log(error);
+      // this.showMessage('Error adding brand..');
+      // this.renderSpinner();
+    }
   }
 
 
