@@ -21,6 +21,16 @@ import {
   getBrand,
   getBrands,
 } from './dashboard/brands_api.js';
+
+import {
+  createOrder,
+  updateOrder,
+  deleteOrder,
+  getOrder,
+  getOrders,
+} from './dashboard/orders_api.js';
+
+
 import {
   createCategory,
   updateCategory,
@@ -47,5 +57,8 @@ router.route('/brands/:id').get(getBrand).put(updateBrand).delete(deleteBrand);
 router.route('/categories').get(getCategories).post(createCategory);
 router.route('/categories/:id').get(getCategory).delete(deleteCategory).put(updateCategory);
 router.route('/categories/products/:id').get(getCategoryProducts);
+
+router.route('/orders').get(getOrders).post(createOrder);
+router.route('/orders/:id').get(getOrder).put(updateOrder).delete(deleteOrder);
 
 export default router;

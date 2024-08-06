@@ -1,12 +1,12 @@
 import express from 'express';
 import {
-  usersIndex,
-  ordersIndex,
+  usersIndex
 } from '../controllers/dashboard_controller.js';
 
 import { productsIndex } from '../controllers/dashboard/products_controller.js';
 import { suppliersIndex } from '../controllers/dashboard/suppliers_controller.js';
 import { brandsIndex } from '../controllers/dashboard/brands_controller.js';
+import { ordersIndex } from '../controllers/dashboard/orders_controller.js';
 import { categoriesIndex } from '../controllers/dashboard/categories_controller.js';
 
 const router = express.Router();
