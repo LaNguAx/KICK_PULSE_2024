@@ -1,4 +1,7 @@
+import CategoryService from "../../services/dashboard/category_service.js";
+
 export async function getIndex(req, res) {
-  res.render('../views/frontend/faq', {
-  });
+  const categories = await CategoryService.getCategories();
+
+  res.render('../views/frontend/faq', { categories, session: req.session });
 }

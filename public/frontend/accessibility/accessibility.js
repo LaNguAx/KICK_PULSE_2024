@@ -1,13 +1,12 @@
 import Main from '../main.js';
 import Header from '../header.js';
 
-class Stores{
+class Accessibility {
   constructor() {
 
   }
 }
 
 
-Main.initComponents([Header,Stores]);
-
+Main.initComponents([Header, Accessibility]);
 Main.hidePreLoader();
