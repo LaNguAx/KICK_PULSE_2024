@@ -5,7 +5,7 @@ import {
   createProduct,
   deleteProduct,
   getProductsByGender
-} from './dashboard/products_api.js';
+} from './products_api.js';
 
 import {
   createSupplier,
@@ -13,14 +13,14 @@ import {
   getSupplier,
   getSupplierBrands,
   getSuppliers,
-} from './dashboard/suppliers_api.js';
+} from './suppliers_api.js';
 import {
   createBrand,
   updateBrand,
   deleteBrand,
   getBrand,
   getBrands,
-} from './dashboard/brands_api.js';
+} from './brands_api.js';
 
 import {
   createOrder,
@@ -28,7 +28,7 @@ import {
   deleteOrder,
   getOrder,
   getOrders,
-} from './dashboard/orders_api.js';
+} from './orders_api.js';
 
 
 import {
@@ -38,7 +38,7 @@ import {
   getCategories,
   getCategory,
   getCategoryProducts,
-} from './dashboard/categories_api.js';
+} from './categories_api.js';
 const router = express.Router();
 
 router.route('/products').get(getProducts).post(createProduct);

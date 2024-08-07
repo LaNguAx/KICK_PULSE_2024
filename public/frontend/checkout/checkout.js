@@ -2,6 +2,7 @@ import Main from '../main.js';
 import QuickView from '../quickView.js';
 import Header from '../header.js';
 import Cart from '../cart.js';
+import FormValidator from '../formValidator.js';
 
 class Checkout {
 
@@ -11,7 +12,6 @@ class Checkout {
   checkoutFieldsContainer;
 
   constructor() {
-
     this.checkoutCart = Cart.getCart();
     this.checkoutCartContainer = document.querySelector('#checkout-cart-container');
     this.checkoutForm = document.querySelector('#checkoutForm');
@@ -22,15 +22,10 @@ class Checkout {
   }
 
   initCheckoutEventListeners() {
-
     this.checkoutCartContainer.addEventListener('click', this.handleCheckoutCartContainerClick.bind(this));
-
     this.checkoutForm.addEventListener('submit', this.handleCheckoutFormSubmit.bind(this));
-
-    this.initFormSubmitHandle();
     this.initCCfields();
   }
-
 
   handleCheckoutCartContainerClick(e) {
     if (e.target.closest('.btn-checkout-delete-cart-item')) {
@@ -42,10 +37,11 @@ class Checkout {
   async handleCheckoutFormSubmit(e) {
     e.preventDefault();
 
+    if (!this.checkoutForm.checkValidity())
+      return;
+
     if (this.checkoutCart.length == 0) {
-
       Main.renderMessage(this.checkoutFieldsContainer, true, `You can't checkout because you don't have any products..`, 'beforeend');
-
       setTimeout(() => Main.renderMessage(this.checkoutFieldsContainer, false), 1500);
       return;
     }
@@ -56,13 +52,10 @@ class Checkout {
     this.checkoutCart = Cart.getCart();
     form.cart = this.checkoutCart;
 
-    console.log(form);
     await this.sendOrder(form);
   }
 
-
   async sendOrder(order) {
-
     try {
       const response = await fetch(`/api/orders/`, {
         method: 'POST',
@@ -75,18 +68,10 @@ class Checkout {
       if (!response.ok) throw new Error('Failed getting response');
       await response.json();
 
-      // this.renderSpinner(this.feedbackMessage, false);
-      // this.showMessage('Successfully added brand!');
-
-      // this.formAddBrand.reset();
-
     } catch (error) {
       console.log(error);
-      // this.showMessage('Error adding brand..');
-      // this.renderSpinner();
     }
   }
-
 
   deleteCheckoutCartItem(e) {
     const row = e.target.closest('tr');
@@ -99,15 +84,12 @@ class Checkout {
 
     Cart.updateCart(newCart);
     this.renderCheckoutCart();
-
   }
 
   renderCheckoutCart() {
-
     const table = this.checkoutCartContainer.querySelector('tbody');
     table.innerHTML = '';
 
-    // getting latest cart data
     this.checkoutCart = Cart.getCart();
     this.checkoutCartContainer.querySelector('.badge').innerText = this.checkoutCart.length;
 
@@ -117,49 +99,26 @@ class Checkout {
       return;
     }
 
-    // this.cartModal.querySelector('.modal-footer > span').classList.add('hidden');
     let total = 0;
     this.checkoutCart.forEach(item => {
-
       table.insertAdjacentHTML('beforeend', `
-
-          <tr data-product-id="${item._id}" data-product-quantity="${item.quantity}" data-product-size="${item.size}">
-                <td><img src="${item.img}" class="img-fluid" alt="${item.title}"
-                              style="width: 50px; height: auto;"></td>
-                         <td style="font-size:0.85rem;">${item.title}</td>
-                                <td>${item.quantity}</td>
-                                <td>${item.price}</td>
-                                <td>${item.size}</td>
-                                <td><button type="button" class="btn btn-outline-danger btn-sm btn-checkout-delete-cart-item">&times;</button></td>
-                      </tr>`);
+        <tr data-product-id="${item._id}" data-product-quantity="${item.quantity}" data-product-size="${item.size}">
+          <td><img src="${item.img}" class="img-fluid" alt="${item.title}" style="width: 50px; height: auto;"></td>
+          <td style="font-size:0.85rem;">${item.title}</td>
+          <td>${item.quantity}</td>
+          <td>${item.price}</td>
+          <td>${item.size}</td>
+          <td><button type="button" class="btn btn-outline-danger btn-sm btn-checkout-delete-cart-item">&times;</button></td>
+        </tr>`);
 
       total += item.price * item.quantity;
-    })
+    });
 
     const formattedTotal = total.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
     });
     this.checkoutCartContainer.parentElement.querySelector('.cart-total').innerText = formattedTotal;
-
-
-  }
-
-  initFormSubmitHandle() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    const forms = document.querySelectorAll('.needs-validation')
-
-    // Loop over them and prevent submission
-    Array.from(forms).forEach(form => {
-      form.addEventListener('submit', event => {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-
-        form.classList.add('was-validated')
-      }, false)
-    })
   }
 
   initCCfields() {
@@ -173,7 +132,5 @@ class Checkout {
   }
 }
 
-
-Main.initComponents([Header, QuickView, Checkout]);
-
+Main.initComponents([Header, QuickView, FormValidator, Checkout]);
 Main.hidePreLoader();

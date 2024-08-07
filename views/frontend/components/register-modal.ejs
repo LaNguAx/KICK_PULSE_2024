@@ -7,28 +7,44 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-5 pt-0">
-        <form class="">
+        <form class="needs-validation" novalidate>
           <div class="row">
             <div class="col-md-6 mb-3">
               <div class="form-floating">
-                <input type="text" class="form-control rounded-3" id="floatingFirstName" placeholder="First Name">
+                <input type="text" class="form-control rounded-3" id="floatingFirstName" placeholder="First Name"
+                  name="firstName" required>
                 <label for="floatingFirstName">First Name</label>
+                <div class="invalid-feedback">
+                  Please enter your first name.
+                </div>
               </div>
             </div>
             <div class="col-md-6 mb-3">
               <div class="form-floating">
-                <input type="text" class="form-control rounded-3" id="floatingLastName" placeholder="Last Name">
+                <input type="text" class="form-control rounded-3" id="floatingLastName" placeholder="Last Name"
+                  name="lastName" required>
                 <label for="floatingLastName">Last Name</label>
+                <div class="invalid-feedback">
+                  Please enter your last name.
+                </div>
               </div>
             </div>
           </div>
           <div class="form-floating mb-3">
-            <input type="email" class="form-control rounded-3" id="floatingEmail" placeholder="name@example.com">
+            <input type="email" class="form-control rounded-3" id="floatingEmail" autocomplete="email"
+              placeholder="name@example.com" name="email" required>
             <label for="floatingEmail">Email address</label>
+            <div class="invalid-feedback">
+              Please enter a valid email address.
+            </div>
           </div>
           <div class="form-floating mb-3">
-            <input type="password" class="form-control rounded-3 floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+            <input type="password" class="form-control rounded-3 floatingPassword" id="pswd-register"
+              placeholder="Password" name="password" required>
+            <label for="pswd-register">Password</label>
+            <div class="invalid-feedback">
+              Please enter your password.
+            </div>
           </div>
           <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign up</button>
           <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>

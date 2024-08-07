@@ -10,7 +10,8 @@ export async function getIndex(req, res) {
 
     res.render('../views/frontend/product', {
       categories,
-      product
+      product,
+      session: req.session
     });
   }
   catch (e) {

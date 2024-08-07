@@ -1,13 +1,13 @@
 import Main from '../main.js';
 import Header from '../header.js';
 
-class PageNotFound {
+class Profile {
   constructor() {
 
   }
 }
 
 
-Main.initComponents([Header, PageNotFound]);
+Main.initComponents([Header, Profile]);
 
 Main.hidePreLoader();

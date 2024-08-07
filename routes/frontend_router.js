@@ -1,6 +1,8 @@
 import express from 'express';
 
 import { getIndex as getHomeIndex } from '../controllers/frontend/home_Controller.js';
+import { login, register, mustLogin, alreadyLoggedIn, logout } from '../controllers/auth_Controller.js';
+import { getIndex as getProfileIndex } from '../controllers/frontend/profile_Controller.js';
 import { getIndex as getLoginIndex } from '../controllers/frontend/login_Controller.js';
 import { getIndex as getRegisterIndex } from '../controllers/frontend/register_Controller.js';
 import { getIndex as getShippingIndex } from '../controllers/frontend/shipping_Controller.js';
@@ -12,13 +14,15 @@ import { getIndex as getGeneralIndex } from '../controllers/frontend/general_Con
 import { getIndex as getFaqIndex } from '../controllers/frontend/faq_Controller.js';
 import { getIndex as getContactIndex } from '../controllers/frontend/contact_Controller.js';
 import { getIndex as getAccessibilityIndex } from '../controllers/frontend/accessibility_Controller.js';
+
 import { getIndex as getAboutIndex } from '../controllers/frontend/aboutus_Controller.js';
 
-import { getIndex as getCategoryIndex, categoryMiddleware, getSubCategoryIndex} from '../controllers/frontend/category_Controller.js';
+import { getIndex as getCategoryIndex, categoryMiddleware, getSubCategoryIndex } from '../controllers/frontend/category_Controller.js';
 import { getIndex as getProductIndex, productMiddleware } from '../controllers/frontend/product_Controller.js';
 import { getIndex as get404Index } from '../controllers/frontend/404_Controller.js';
 
 import { getIndex as getCheckoutIndex } from '../controllers/frontend/checkout_Controller.js';
+
 
 
 
@@ -28,8 +32,11 @@ const router = express.Router();
 router.route('/').get((req, res) => res.redirect('/home'));
 router.route('/home').get(getHomeIndex);
 
-router.route('/login').get(getLoginIndex);
-router.route('/register').get(getRegisterIndex);
+router.route('/login').get(alreadyLoggedIn, getLoginIndex).post(login);
+router.route('/register').get(alreadyLoggedIn, getRegisterIndex).post(register);
+router.route('/profile').get(mustLogin, getProfileIndex);
+router.route('/logout').get(mustLogin, logout)
+
 router.route('/shipping').get(getShippingIndex);
 router.route('/terms').get(getTermsIndex);
 router.route('/privacy').get(getPrivacyIndex);
@@ -49,11 +56,9 @@ router.route('/category/:category/:subcategory').get(getSubCategoryIndex);
 router.route('/product/id/:id').get(productMiddleware);
 router.route('/product/:name').get(getProductIndex);
 
-
 router.route('/checkout').get(getCheckoutIndex);
 
-
-
 router.route('/404').get(get404Index);
+
 
 export default router;

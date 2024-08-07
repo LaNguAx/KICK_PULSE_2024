@@ -4,5 +4,5 @@ import ProductsService from '../../services/dashboard/product_service.js';
 export async function getIndex(req, res) {
   const categories = await CategoriesService.getCategories();
   const menProducts = await ProductsService.getProductsByGender('men');
-  res.render('../views/frontend/home', { categories, menProducts });
+  res.render('../views/frontend/home', { categories, menProducts, session: req.session });
 }
