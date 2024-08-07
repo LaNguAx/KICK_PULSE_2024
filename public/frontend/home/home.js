@@ -1,6 +1,7 @@
 import Main from '../main.js';
 import QuickView from '../quickView.js';
 import Header from '../header.js';
+import FormValidator from '../formValidator.js';
 
 class Home {
 
@@ -108,7 +109,7 @@ class Home {
 
 }
 
-Main.initComponents([Header, QuickView, Home]);
+Main.initComponents([Header, QuickView, FormValidator, Home]);
 
 Main.hidePreLoader();
 

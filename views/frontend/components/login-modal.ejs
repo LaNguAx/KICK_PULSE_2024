@@ -8,14 +8,22 @@
       </div>
 
       <div class="modal-body p-5 pt-0">
-        <form class="">
+        <form class="needs-validation" novalidate>
           <div class="form-floating mb-3">
-            <input type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control rounded-3" id="floatingInput" autocomplete="email"
+              placeholder="name@example.com" name="email" required>
             <label for="floatingInput">Email address</label>
+            <div class="invalid-feedback">
+              Please enter a valid email address.
+            </div>
           </div>
           <div class="form-floating mb-3">
-            <input type="password" class="form-control rounded-3 floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+            <input type="password" class="form-control rounded-3 floatingPassword" id="pswd" placeholder="Password"
+              name="password" required>
+            <label for="pswd">Password</label>
+            <div class="invalid-feedback">
+              Please enter your password.
+            </div>
           </div>
           <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button>
           <hr class="my-4">
@@ -27,7 +35,6 @@
             </svg>
             Sign up here
           </button>
-
         </form>
       </div>
     </div>

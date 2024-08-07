@@ -129,9 +129,11 @@ class Category {
     const DEFAULT_PRICE_RANGE = 2500;
     const filterPrice = document.getElementById('priceRange');
     filterPrice.value = DEFAULT_PRICE_RANGE;
+    document.getElementById('currentPrice').innerText = filterPrice.value;
 
     this.collapseAllAccordions();
     this.filtersModalObj.hide();
+    this.applyFiltersBtn.click()
   }
 
   collapseAllAccordions() {

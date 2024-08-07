@@ -13,7 +13,8 @@ export async function getIndex(req, res) {
       categories,
       category,
       categoryProducts,
-      brands
+      brands,
+      session: req.session
     });
   }
   catch (e) {
