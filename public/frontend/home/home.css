@@ -17,3 +17,25 @@ video {
     }
 }
 
+.img-container {
+  width: 105%;
+  height: 178px; /* גובה קבוע */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card {
+  border: none;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-body {
+  padding-top: 10px;
+}
+
+
