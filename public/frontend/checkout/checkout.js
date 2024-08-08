@@ -51,12 +51,14 @@ class Checkout {
 
     this.checkoutCart = Cart.getCart();
     form.cart = this.checkoutCart;
+    form.total = this.checkoutCart.reduce((total, item) => total + item.price * item.quantity, 0);
 
     await this.sendOrder(form);
   }
 
   async sendOrder(order) {
     try {
+      Main.renderSpinner(this.checkoutFieldsContainer.querySelector('button[type="submit"]'), true);
       const response = await fetch(`/api/orders/`, {
         method: 'POST',
         headers: {
@@ -67,8 +69,16 @@ class Checkout {
 
       if (!response.ok) throw new Error('Failed getting response');
       await response.json();
+      Main.renderSpinner(this.checkoutFieldsContainer.querySelector('button[type="submit"]'), false);
+
+      // emptying the cart
+      this.checkoutCart = [];
+      Cart.updateCart(this.checkoutCart);
+
+      window.location.href = '/thankyou'
 
     } catch (error) {
+      Main.renderSpinner(this.checkoutFieldsContainer.querySelector('button[type="submit"]'), false);
       console.log(error);
     }
   }

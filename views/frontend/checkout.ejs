@@ -97,7 +97,7 @@
         </div>
         <div class="col-md-7 col-lg-8" id="checkout-fields-container">
           <h4 class="mb-3">Billing address</h4>
-          <form class="needs-validation" novalidate="" id="checkoutForm">
+          <form class="needs-validation" novalidate="" id="checkoutForm" data-user-email="<%= session.email || '' %>">
             <div class="row g-3">
               <div class="col-sm-6">
                 <label for="firstName" class="form-label">First name</label>
@@ -227,6 +227,10 @@
   <!-- MODALS -->
   <%- include('./components/cart-modal') %>
   <%- include('./components/quickview-modal') %>
+  <% if(!session.userId) { %>
+  <%- include('./components/register-modal') %>
+  <%- include('./components/login-modal') %>
+  <% } %>
 
   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>

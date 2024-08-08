@@ -32,6 +32,10 @@ const UserSchema = new Schema(
       //   'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
       // ],
     },
+    orders: {
+      type: [mongoose.Types.ObjectId],
+      default: [], // Default to an empty array if no orders are present
+    }
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

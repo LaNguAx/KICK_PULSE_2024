@@ -5,10 +5,13 @@ class Cart {
   cartModal;
   cartModalObj;
 
+  total = 0;
+
   constructor() {
     this.cartModal = document.querySelector('#cart-modal');
     this.cartBtn = document.querySelector('#cart-btn');
     this.cart = Cart.getCart();
+    this.cart.forEach(item => this.total += item.price);
 
     this.cartModalObj = new bootstrap.Modal(document.getElementById('cart-modal'), {
       keyboard: false

@@ -1,4 +1,6 @@
 import OrderService from '../../services/dashboard/order_service.js';
+import AuthService from '../../services/auth_service.js';
+import { UsersModel } from '../../models/user.js';
 
 // Get all orders
 export async function getOrders(req, res) {
@@ -15,9 +17,23 @@ export async function getOrders(req, res) {
 export async function createOrder(req, res) {
   try {
     const order = { ...req.body };
+    // if a logged in user ordered, save the order in his orders array
+    if (req.session.userId)
+      order.orderedBy = req.session.email;
 
     const newOrder = await OrderService.createOrder(order);
+
+    if (req.session.userId) {
+      const user = await AuthService.getUser(req.session.email);
+      if (!user)
+        return res.status(404).json({ success: false, message: 'Failed finding logged in user..' });
+
+      user.orders.push(newOrder._id);
+      const updatedOrders = user.orders;
+      await AuthService.updateUserOrders(user, updatedOrders);
+    }
     res.status(201).json({ success: true, data: newOrder });
+
   } catch (error) {
     console.error('Error creating order:', error);
     res.status(500).json({ success: false, message: 'Server error' });
@@ -66,6 +82,15 @@ export async function deleteOrder(req, res) {
   const { id } = req.params;
   try {
     const deletedOrder = await OrderService.deleteOrder(id);
+
+    const userWhoOrdered = await AuthService.getUser(deletedOrder.orderedBy, deletedOrder._id);
+    if (userWhoOrdered) {
+      // Remove the order ID from the user's orders array
+      userWhoOrdered.orders.pull(deletedOrder._id);
+      await userWhoOrdered.save();
+      console.log(`Order ${deletedOrder._id} removed from user ${userWhoOrdered.email}`);
+    }
+
     if (!deletedOrder) {
       return res
         .status(404)

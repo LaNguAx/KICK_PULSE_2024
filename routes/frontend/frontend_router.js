@@ -22,6 +22,7 @@ import { getIndex as getProductIndex, productMiddleware } from '../../controller
 import { getIndex as get404Index } from '../../controllers/frontend/404_Controller.js';
 
 import { getIndex as getCheckoutIndex } from '../../controllers/frontend/checkout_Controller.js';
+import { getIndex as getThankYouIndex } from '../../controllers/frontend/thankyou_Controller.js';
 
 
 
@@ -56,6 +57,7 @@ router.route('/product/id/:id').get(productMiddleware);
 router.route('/product/:name').get(getProductIndex);
 
 router.route('/checkout').get(getCheckoutIndex);
+router.route('/thankyou').get(getThankYouIndex);
 
 router.route('/404').get(get404Index);
 

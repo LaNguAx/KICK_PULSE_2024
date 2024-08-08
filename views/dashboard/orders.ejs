@@ -104,6 +104,11 @@
                   </li>
                   <% }) %>
                 </ul>
+                <h6 class="card-subtitle mb-2 text-muted">Total:
+                  <%= order.cart.reduce((total, item) => total + item.price * item.quantity, 0)%></h6>
+                <h6 class="card-subtitle mb-2 text-muted">Ordered By:
+                  <%= order.orderedBy || 'Temp User' %></h6>
+
               </div>
               <button type="button" class="btn btn-outline-primary supplied-order-btn">
                 <i class="bi bi-check-circle"></i>
