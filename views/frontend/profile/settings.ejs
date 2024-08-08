@@ -20,8 +20,75 @@
   <div class="content">
     <%- include('../components/header') %>
 
-    <main class="container-fluid mb-5">
-      hello, how are you <%= session.name %> ? from settings
+    <main class="container-fluid mb-5 d-flex flex-column justify-content-center align-items-center">
+      <h1 class="mt-5">Settings</h1>
+      <p class="lead">Hi, how are you <%= session.name %>?<br>Change your details here..</p>
+      <form id="settings-form" class="needs-validation" novalidate action="/settings" method="POST"
+        data-user-id="<%= session.userId %>">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter your first name"
+              required value="<%= session.name.split(' ')[0] %>">
+            <div class="invalid-feedback">
+              Please enter your first name.
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter your last name"
+              required value="<%= session.name.split(' ')[1] %>">
+            <div class="invalid-feedback">
+              Please enter your last name.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Current Email address</label>
+          <input type="email" class="form-control" id="currentEmail" name="currentEmail" placeholder="name@example.com"
+            required value="<%= session.email %>" disabled>
+          <div class="invalid-feedback">
+            Please enter a valid email address.
+          </div>
+
+          <div class="form-check form-switch m-2">
+            <input class="form-check-input" type="checkbox" role="switch" id="newEmailCheckbox">
+            <label class="form-check-label" for="email">New email address?</label>
+          </div>
+
+          <div class="container hidden">
+            <label for="email" class="form-label">New Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required
+              disabled>
+            <div class="invalid-feedback">
+              Please enter a valid email address.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="currentPassword" class="form-label">Current Password</label>
+          <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+            placeholder="Enter current password" required>
+          <div class="invalid-feedback">
+            Please enter your current password.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">New Password</label>
+          <input type="password" class="form-control" id="newPassword" name="newPassword"
+            placeholder="Enter new password" required>
+          <div class="invalid-feedback">
+            Please enter a new password.
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
     </main>
 
     <%- include('../components/footer') %>
