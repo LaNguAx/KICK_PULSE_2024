@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 import dashboardRouter from './routes/dashboard_router.js';
 import apiRouter from './apis/dashboard/dashboard_api_router.js';
-import frontEndRouter from './routes/frontend_router.js';
+import frontEndRouter from './routes/frontend/frontend_router.js';
 import dotenv from 'dotenv';
 
 const app = express();

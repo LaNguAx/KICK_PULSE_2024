@@ -10,33 +10,33 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" />
 
   <link rel="stylesheet" href="/frontend/main.css">
-  <link rel="stylesheet" href="/frontend/profile/profile.css">
-  <title>KickPulse 404</title>
+  <link rel="stylesheet" href="/frontend/profile/settings/settings.css">
+  <title>KickPulse My Settings</title>
 </head>
 
 <body class="mb-5">
-  <%- include('./components/preloader') %>
+  <%- include('../components/preloader') %>
 
   <div class="content">
-    <%- include('./components/header') %>
+    <%- include('../components/header') %>
 
     <main class="container-fluid mb-5">
-      hello, how are you <%= session.name %> ?
+      hello, how are you <%= session.name %> ? from settings
     </main>
 
-    <%- include('./components/footer') %>
+    <%- include('../components/footer') %>
 
   </div>
 
 
   <!-- MODALS -->
-  <%- include('./components/cart-modal') %>
-  <%- include('./components/quickview-modal') %>
+  <%- include('../components/cart-modal') %>
+  <%- include('../components/quickview-modal') %>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script type="module" src="/frontend/profile/profile.js"></script>
+  <script type="module" src="/frontend/profile/settings/settings.js"></script>
 </body>
 
 </html>
