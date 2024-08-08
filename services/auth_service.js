@@ -42,7 +42,45 @@ const userExists = async (email) => {
   return existingUser;
 }
 
+const update = async (user) => {
+  if (!user.email || !user.firstName || !user.lastName || !user.currentPassword || !user.newPassword) {
+    throw new Error('All fields are required.');
+  }
+
+  try {
+    // Check if user exists by email
+    const existingUser = await userExists(user.email);
+    if (!existingUser) return null;
+
+    // Verify current password
+    const isMatch = user.currentPassword === existingUser.password;
+    if (!isMatch) {
+      throw new Error('Current password is incorrect.');
+    }
+
+    // Update user details
+    existingUser.firstName = user.firstName;
+    existingUser.lastName = user.lastName;
+    existingUser.password = user.newPassword;
+    if (user.newEmail)
+      existingUser.email = user.newEmail;
+
+    // Save the updated user
+    await existingUser.save();
+    console.log('User updated successfully:', existingUser);
+
+    return existingUser;
+
+  } catch (error) {
+    console.error('Error during update:', error);
+    throw new Error(error.message);
+  }
+};
+
+
+
 export default {
   login,
-  register
+  register,
+  update
 };

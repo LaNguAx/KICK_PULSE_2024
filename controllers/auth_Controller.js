@@ -56,10 +56,29 @@ export async function register(req, res) {
     req.session.userId = registeredUser._id;
     req.session.name = `${registeredUser.firstName} ${registeredUser.lastName}`;
     req.session.email = registeredUser.email;
-    console.log('Session:', req.session);
     return res.status(201).json({ message: 'Registration successful', user: registeredUser });
   } catch (error) {
     console.error('Error during registration:', error);
     return res.status(500).json({ error });
+  }
+}
+
+export async function updateUser(req, res) {
+  const { firstName, lastName, email, newEmail, currentPassword, newPassword } = req.body;
+  const user = { firstName, lastName, email, newEmail, currentPassword, newPassword };
+
+  try {
+    const updatedUser = await AuthService.update(user);
+    if (!updatedUser)
+      return res.status(404).json({ error: 'User not found with this email.' });
+
+    req.session.userId = updatedUser._id;
+    req.session.name = `${updatedUser.firstName} ${updatedUser.lastName}`;
+    req.session.email = updatedUser.email;
+
+    return res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+  } catch (error) {
+    console.error('Error during update:', error);
+    return res.status(500).json({ error: `${error.message}` });
   }
 }
