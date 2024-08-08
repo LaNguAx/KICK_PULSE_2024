@@ -23,7 +23,7 @@ const getOrder = async (id) => {
 const createOrder = async (order) => {
   try {
 
-    const { firstName, lastName, email, address, country, zip, ccName, ccNumber, ccExpiration, ccCvv, cart } = order;
+    const { firstName, lastName, email, address, country, zip, ccName, ccNumber, ccExpiration, ccCvv, cart, total, orderedBy } = order;
 
     const validatedOrder = {
       firstName,
@@ -33,8 +33,11 @@ const createOrder = async (order) => {
       country,
       zip,
       paymentDetails: { ccName, ccNumber, ccExpiration, ccCvv },
-      cart
+      cart,
+      total
     };
+    if (orderedBy)
+      validatedOrder.orderedBy = orderedBy;
 
     const newOrder = new OrdersModel(validatedOrder);
 
@@ -70,10 +73,24 @@ const updateOrder = async (id, options) => {
   }
 };
 
+const getOrdersByIds = async (orderIds) => {
+  try {
+
+    // Fetch the orders by their IDs
+    const orders = await OrdersModel.find({ _id: { $in: orderIds } });
+
+    return orders;
+  } catch (error) {
+    console.error('Error fetching orders by Ids:', error);
+    throw error;
+  }
+}
+
 export default {
   getOrders,
   getOrder,
   createOrder,
   deleteOrder,
   updateOrder,
+  getOrdersByIds
 };

@@ -21,7 +21,7 @@ const register = async (user) => {
 
   try {
 
-    const exists = await userExists(user.email)
+    const exists = await getUser(user.email)
     if (exists) return null;
 
     const newUser = new UsersModel(user);
@@ -37,7 +37,7 @@ const register = async (user) => {
 };
 
 
-const userExists = async (email) => {
+const getUser = async (email) => {
   const existingUser = await UsersModel.findOne({ email });
   return existingUser;
 }
@@ -49,7 +49,7 @@ const update = async (user) => {
 
   try {
     // Check if user exists by email
-    const existingUser = await userExists(user.email);
+    const existingUser = await getUser(user.email);
     if (!existingUser) return null;
 
     // Verify current password
@@ -65,6 +65,9 @@ const update = async (user) => {
     if (user.newEmail)
       existingUser.email = user.newEmail;
 
+    if (user.orders)
+      existingUser.orders = user.orders;
+
     // Save the updated user
     await existingUser.save();
     console.log('User updated successfully:', existingUser);
@@ -77,10 +80,33 @@ const update = async (user) => {
   }
 };
 
+const updateUserOrders = async (user, orders) => {
+  try {
+    user.orders = orders;
+    await user.save();
+
+  } catch (e) {
+    console.error('Error updating user orders..', e);
+    throw new Error(error.message);
+  }
+}
+
+const findUserWhoOrderedSpecificOrder = async (email, orderId) => {
+  try {
+    const user = await Users.findOne({ email, orders: orderId });
+    return user;
+  } catch (error) {
+    console.error('Error finding user:', error);
+    throw error; // Re-throw the error after logging it
+  }
+};
 
 
 export default {
   login,
   register,
-  update
+  update,
+  getUser,
+  updateUserOrders,
+  findUserWhoOrderedSpecificOrder
 };

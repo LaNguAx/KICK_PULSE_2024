@@ -50,6 +50,14 @@ const OrderSchema = new Schema(
       type: Boolean,
       default: false
     },
+    orderedBy: {
+      type: String,
+      required: false
+    },
+    total: {
+      type: String,
+      required: true,
+    },
     cart: [
       {
         _id: {
