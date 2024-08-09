@@ -94,6 +94,10 @@
                 </p>
                 <p class="card-text">Gender: <%= el.gender %></p>
               </div>
+              <button type="button" class="btn btn-outline-secondary edit-product-btn">
+                <i class="bi bi-pencil-square"></i>
+                <span class="visually-hidden">Edit Category</span>
+              </button>
             </div>
           </div>
           <% }); %>
@@ -226,6 +230,137 @@
           </form>
           <div class="feedback-message container text-center mt-4 hidden fs-3"></div>
         </div>
+
+        <!--  EDIT -->
+        <div class="col edit-product content-container hidden">
+          <h1 class="text-center mb-4">Edit Product</h1>
+          <span id="spinner-container"></span>
+          <form class="row edit-product-form" action="/api/products" method="PUT" data-product-id="">
+            <div class="col-6 mb-3">
+              <label for="name" class="form-label">Product Name</label>
+              <input type="text" class="form-control" name="name" id="editName" value="test1" placeholder="" required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="sizes" class="form-label">Sizes (comma seperated)</label>
+              <input type="text" class="form-control" name="sizes" id="editSizes" value="1,2,3" placeholder="" required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="price" class="form-label">Price</label>
+              <input type="number" class="form-control" name="price" id="editPrice" step="0.01" min="0" value="500"
+                required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="quantity" class="form-label">Quantity</label>
+              <input type="number" class="form-control" name="quantity" id="editQuantity" min="0" value="5" required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea type="text" class="form-control" name="description" id="editDescription" rows="3"
+                required> TEST DESCRIPTION</textarea>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="supplier" class="form-label">Supplier</label>
+              <select class="form-select" name="supplier" id="suppliers-option" required>
+
+                <% if(suppliers.length == 0) { %>
+
+                <option value="" disabled selected>
+                  You need to add suppliers first!
+                </option>
+
+                <% } else { %>
+                <option value="" disabled selected>
+                  Please select a supplier
+                </option>
+
+                <% suppliers.forEach(el => { %>
+                <option value="<%= el.id %>" data-supplier-name="<%= el.name %>">
+                  <%= el.name %>
+                </option>
+                <% }) %>
+
+                <% } %>
+
+
+              </select>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="image" class="form-label">Image URL</label>
+              <input type="url" class="form-control" name="image" id="image"
+                value="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-980x653.jpg"
+                required>
+            </div>
+
+
+            <div class="col-6 mb-3">
+              <label for="brand" class="form-label">Brand</label>
+              <select class="form-select" name="brand" id="brand-option" required>
+                <option value="" disabled selected>
+                  Please select a brand
+                </option>
+              </select>
+            </div>
+
+
+            <div class="col-6 mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" name="category" id="category-option" required>
+
+
+                <% if(categories.length == 0) { %>
+                <option value="" disabled selected>
+                  You need to add categories first!
+                </option>
+
+
+                <% } else { %>
+                <option value="" disabled selected>
+                  Please select a category
+                </option>
+                <% categories.forEach(el => { %>
+                <option value="<%= el._id %>" data-category-name="<%= el.name %>">
+                  <%= el.name %>
+                </option>
+                <% }) %>
+
+
+                <% } %>
+
+
+
+              </select>
+            </div>
+
+
+
+            <div class="col-6 mb-3">
+              <label for="gender" class="form-label">Gender</label>
+              <select class="form-select" name="gender" id="gender-option" required>
+                <option value="" disabled selected>
+                  Please select a gender
+                </option>
+                <option value="men">Men</option>
+                <option value="women">Women</option>
+                <option value="kids">Kids</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6 subcategories-container"></div>
+
+            <div class="d-flex align-items-center justify-content-center">
+              <button type="submit" class="btn btn-primary mx-auto">
+                Edit & Save Product
+              </button>
+            </div>
+          </form>
+          <div class="feedback-message-edit container text-center mt-4 hidden fs-3"></div>
+        </div>
+
       </div>
     </div>
 

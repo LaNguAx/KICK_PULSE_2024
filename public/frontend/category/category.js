@@ -50,6 +50,7 @@ class Category {
 
     const products = result.data;
 
+
     const filters = checkedFilters.map(filter => filter.getAttribute('id'));
 
     const filterPrice = parseInt(document.getElementById('priceRange').value);
@@ -86,22 +87,6 @@ class Category {
 
 
     Main.renderSpinner(this.categoryProductsContainer, false);
-
-    //if price range changed and other filters stayed
-    const DEFAULT_PRICE_RANGE = 2500;
-    if (checkedFilters.length == 0 && filterPrice != DEFAULT_PRICE_RANGE) {
-      const pricedProducts = products.filter(prod => prod.price <= filterPrice);
-      this.renderProducts(pricedProducts);
-      return;
-
-    }
-
-
-    if (checkedFilters.length == 0) {
-      this.renderProducts(products);
-      return;
-    }
-
     console.log(filteredProducts)
     if (filteredProducts.length == 0) {
       this.resetFilters();
@@ -111,6 +96,21 @@ class Category {
         Main.renderMessage(this.categoryProductsContainer, false, 'No products found..', 'beforebegin'), 1500);
 
       this.filtersModalObj.hide();
+      return;
+    }
+
+    // //if price range changed and other filters stayed
+    // const DEFAULT_PRICE_RANGE = 2500;
+    // if (checkedFilters.length == 0 && filterPrice != DEFAULT_PRICE_RANGE) {
+    //   const pricedProducts = products.filter(prod => prod.price <= filterPrice);
+    //   if (pricedProducts.length == 0) this.renderProducts(produc)
+    //   this.renderProducts(pricedProducts);
+    //   return;
+
+    // }
+
+    if (checkedFilters.length == 0) {
+      this.renderProducts(products);
       return;
     }
 

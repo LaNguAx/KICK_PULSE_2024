@@ -159,8 +159,7 @@ class Categories {
       const generatedField = this.addSubCategory({ target: this.formEditCategory });
       const input = generatedField.querySelector('input[name="subcategory-name"]');
 
-      input.value = subcat.name
-        ;
+      input.value = subcat.name;
 
       input.setAttribute('data-subcategory-id', subcat._id);
     });
