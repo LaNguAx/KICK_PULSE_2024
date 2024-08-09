@@ -37,8 +37,9 @@
             <a href="#" class="gender-link link-secondary text-decoration-none" data-gender="kids">Kids</a>
           </div>
         </div>
-        <div class="recent-products row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 g-3">
-          <% menProducts.forEach(product => { %>
+        <div
+          class="recent-products row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 g-3 justify-content-center">
+          <% menProducts.splice(3); menProducts.forEach(product => { %>
           <div class="col product-card" data-product-id="<%= product._id %>">
             <div class="card h-100">
               <button type="button" class="btn nav-link p-0 border-0 h-100 d-flex flex-column align-items-center"
@@ -107,9 +108,9 @@
           </div>
         </div>
       </section>
-      
-      
-       
+
+
+
     </main>
     <%- include('./components/footer') %>
   </div>
