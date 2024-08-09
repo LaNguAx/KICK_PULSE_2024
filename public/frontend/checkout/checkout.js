@@ -10,6 +10,8 @@ class Checkout {
   checkoutCart;
   checkoutCartContainer;
   checkoutFieldsContainer;
+  shippingCost = 0;
+  shippingAdded = false;
 
   constructor() {
     this.checkoutCart = Cart.getCart();
@@ -25,6 +27,7 @@ class Checkout {
     this.checkoutCartContainer.addEventListener('click', this.handleCheckoutCartContainerClick.bind(this));
     this.checkoutForm.addEventListener('submit', this.handleCheckoutFormSubmit.bind(this));
     this.initCCfields();
+    this.initShippingOptions();
   }
 
   handleCheckoutCartContainerClick(e) {
@@ -99,7 +102,14 @@ class Checkout {
       return;
     }
 
-    let total = 0;
+    let total = this.checkoutCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    // Add shipping cost if not already added
+    if (this.shippingCost > 0 && !this.shippingAdded) {
+      total += this.shippingCost;
+      this.shippingAdded = true;
+    }
+
     this.checkoutCart.forEach(item => {
       table.insertAdjacentHTML('beforeend', `
         <tr data-product-id="${item._id}" data-product-quantity="${item.quantity}" data-product-size="${item.size}">
@@ -110,8 +120,6 @@ class Checkout {
           <td>${item.size}</td>
           <td><button type="button" class="btn btn-outline-danger btn-sm btn-checkout-delete-cart-item">&times;</button></td>
         </tr>`);
-
-      total += item.price * item.quantity;
     });
 
     const formattedTotal = total.toLocaleString('en-US', {
@@ -119,6 +127,17 @@ class Checkout {
       currency: 'USD',
     });
     this.checkoutCartContainer.parentElement.querySelector('.cart-total').innerText = formattedTotal;
+  }
+
+  initShippingOptions() {
+    document.getElementById('standardDelivery').addEventListener('change', this.updateShippingCost.bind(this, 9.99));
+    document.getElementById('expressDelivery').addEventListener('change', this.updateShippingCost.bind(this, 14.99));
+  }
+
+  updateShippingCost(cost) {
+    this.shippingCost = cost;
+    this.shippingAdded = false; // Reset to ensure it adds the cost only once
+    this.renderCheckoutCart(); // Re-render the cart with updated shipping cost
   }
 
   initCCfields() {

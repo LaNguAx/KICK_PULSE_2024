@@ -86,14 +86,6 @@
             <h5>Total</h5>
             <h5 class="cart-total">$0.00</h5>
           </div>
-
-
-          <form class="card p-2">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code">
-              <button type="submit" class="btn btn-secondary">Redeem</button>
-            </div>
-          </form>
         </div>
         <div class="col-md-7 col-lg-8" id="checkout-fields-container">
           <h4 class="mb-3">Billing address</h4>
@@ -152,6 +144,17 @@
                 <div class="invalid-feedback">
                   Zip code required.
                 </div>
+              </div>
+            </div>
+            <h4 class="mb-3">Delivery Options</h4>
+            <div class="my-3">
+              <div class="form-check">
+                <input id="standardDelivery" name="deliveryOption" type="radio" class="form-check-input" value="9.99" required>
+                <label class="form-check-label" for="standardDelivery">Standard Delivery(Usually delivered within 10 working days.) - $9.99</label>
+              </div>
+              <div class="form-check">
+                <input id="expressDelivery" name="deliveryOption" type="radio" class="form-check-input" value="14.99" required>
+                <label class="form-check-label" for="expressDelivery">Express Delivery(Usually delivered within 2 working days) - $14.99</label>
               </div>
             </div>
 
