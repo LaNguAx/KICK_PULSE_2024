@@ -10,6 +10,12 @@ class Products {
   suppliersOption;
   categoriesOption;
 
+  editProductForm;
+  editProductContainer;
+
+  editSuppliersOption;
+  editCategoriesOption;
+
   constructor() {
     this.productsTab = document.querySelector('.all-products-tab');
     this.addProductTab = document.querySelector('.add-product-tab');
@@ -21,6 +27,13 @@ class Products {
     this.feedbackMessage = document.querySelector('.feedback-message');
     this.suppliersOption = document.querySelector('#suppliers-option');
     this.categoriesOption = document.querySelector('#category-option');
+
+
+    this.editProductContainer = document.querySelector('.edit-product');
+    this.editProductForm = document.querySelector('.edit-product-form');
+    this.editSuppliersOption = this.editProductForm.querySelector('#suppliers-option');
+    this.editCategoriesOption = this.editProductForm.querySelector('#category-option');
+
     this.initEventListeners();
   }
 
@@ -46,10 +59,17 @@ class Products {
 
     });
 
-    this.productsContainer.addEventListener('click', (e) => {
-      if (e.target.classList.contains('delete-product')) {
+    this.productsContainer.addEventListener('click', async (e) => {
+      if (e.target.closest('.delete-product')) {
         this.deleteProduct(e);
+        return;
       }
+
+      if (e.target.closest('.edit-product-btn')) {
+        await this.editProduct(e);
+        return;
+      }
+
     });
 
     this.formAddProduct.addEventListener('submit', (e) => {
@@ -57,17 +77,165 @@ class Products {
       const formData = new FormData(this.formAddProduct);
       const form = Object.fromEntries(formData.entries());
 
-      const validatedForm = this.validateForm(form);
+      const validatedForm = this.validateForm(form, e);
 
       this.addProduct(validatedForm);
     });
 
-    this.suppliersOption.addEventListener('change', (e) =>
-      this.handleSupplierChange(e)
+    this.suppliersOption.addEventListener('change', async (e) =>
+      await this.handleSupplierChange(e)
     );
-    this.categoriesOption.addEventListener('change', (e) =>
-      this.handleCategoriesChange(e)
+    this.categoriesOption.addEventListener('change', async (e) =>
+      await this.handleCategoriesChange(e)
     );
+    this.editSuppliersOption.addEventListener('change', async (e) =>
+      await this.handleSupplierChange(e)
+    );
+    this.editCategoriesOption.addEventListener('change', async (e) =>
+      await this.handleCategoriesChange(e)
+    );
+
+
+
+    this.editProductForm.addEventListener('submit', this.handleEditProductFormSubmit.bind(this));
+
+  }
+
+  async editProduct(e) {
+    const productId = e.target.closest('.card').getAttribute('data-product-id');
+    this.hideAll();
+    // remove tab highlighting 
+    document
+      .querySelectorAll('.tab')
+      .forEach((tab) => tab.classList.remove('active'));
+
+
+
+    this.editSuppliersOption.selectedIndex = 0;
+    this.editCategoriesOption.selectedIndex = 0;
+    this.editProductForm.querySelector('#gender-option').selectedIndex = 0;
+    this.editProductForm.setAttribute('data-product-id', productId);
+
+    const brandsSelect = this.editProductContainer.querySelector('#brand-option').innerHTML = `<option value="" disabled selected>Please select a brand</option>`
+
+    this.editProductContainer.classList.remove('hidden');
+
+
+    const product = await this.getProduct(productId);
+
+    await this.updateFormData(product);
+  }
+
+  async updateFormData(product) {
+
+    this.renderSpinner(this.editProductContainer.querySelector('#spinner-container'), true);
+
+    console.log(product);
+    // update name
+    this.editProductForm.querySelector('input[name="name"]').value = product.name;
+
+    // update sizes
+    this.editProductForm.querySelector('input[name="sizes"]').value = product.sizes.join(',');
+
+    // update price
+    this.editProductForm.querySelector('input[name="price"]').value = product.price;
+
+    // update quantity
+    this.editProductForm.querySelector('input[name="quantity"]').value = product.quantity;
+
+    // update description - assuming it's a textarea
+    this.editProductForm.querySelector('textarea[name="description"]').value = product.description;
+
+    // update image
+    this.editProductForm.querySelector('input[name="image"]').value = product.image;
+
+    // select matching supplier
+    const suppliers = [...this.editSuppliersOption.querySelectorAll('option')].slice(1);
+    let matchingSupplierIndex;
+    suppliers.forEach((supplier, idx) => { if (supplier.getAttribute('value') == product.supplier.id) return matchingSupplierIndex = idx; });
+    this.editSuppliersOption.selectedIndex = matchingSupplierIndex + 1;
+
+    await this.handleSupplierChange({ target: this.editSuppliersOption });
+
+    // select matching brand
+    const brands = [...this.editProductContainer.querySelector('#brand-option').querySelectorAll('option')].slice(1);
+
+    let matchingBrandIndex;
+    brands.forEach((brand, idx) => { if (brand.getAttribute('value') == product.brand.id) return matchingBrandIndex = idx; });
+    this.editProductContainer.querySelector('#brand-option').selectedIndex = matchingBrandIndex + 1;
+    // this.editProductContainer.querySelector('#brand-option').dispatchEvent(new Event('change'));
+
+
+    // select matching category/subcategories
+
+    const categories = [...this.editProductContainer.querySelector('#category-option').querySelectorAll('option')].slice(1);
+
+    let matchingCategoryIndex;
+    categories.forEach((cat, idx) => { if (cat.getAttribute('value') == product.category.id) return matchingCategoryIndex = idx });
+
+    this.editProductContainer.querySelector('#category-option').selectedIndex = matchingCategoryIndex + 1;
+
+
+    await this.handleCategoriesChange({ target: this.editCategoriesOption });
+
+
+    //toggle matching subcategories
+    const subcategories = [...this.editCategoriesOption.closest('form').querySelector('.subcategories-container').querySelectorAll('input[type="checkbox"]')];
+
+    subcategories.forEach((subcatEl, idx) => {
+      const subcatValue = subcatEl.getAttribute('value');
+      console.log(subcatValue)
+      // Check if the current checkbox's value matches any subcategory ID
+      const matchingSubcat = product.category.subcategories.find(subcat => subcat.id === subcatValue);
+
+      if (matchingSubcat) {
+        console.log('Matching Subcategory:', matchingSubcat);
+
+        subcatEl.checked = true; // Set the checkbox as checked
+      } else {
+        subcatEl.checked = false; // Optional: Uncheck if not matching
+      }
+    });
+
+
+
+    // setting gender
+    const genderSelect = this.editProductContainer.querySelector('#gender-option');
+    let matchingGenderIdx;
+
+    const genders = [...genderSelect.querySelectorAll('option')].slice(1);
+    genders.forEach((gender, idx) => {
+      if (gender.value == product.gender) return matchingGenderIdx = idx;
+    })
+    genderSelect.selectedIndex = matchingGenderIdx + 1;
+
+
+    this.renderSpinner(this.editProductContainer.querySelector('#spinner-container'), false);
+
+  }
+
+  async getProduct(id) {
+    try {
+      const response = await fetch(`/api/products/${id}`);
+      if (!response.ok) {
+        throw new Error('Product not found');
+      }
+      const product = await response.json();
+      return product.data;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      throw error;
+    }
+  }
+  async handleEditProductFormSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this.editProductForm);
+    const form = Object.fromEntries(formData.entries());
+
+    const validatedForm = this.validateForm(form, e);
+
+    await this.updateProduct(validatedForm, this.editProductForm.getAttribute('data-product-id'));
   }
 
   highlightTab(e) {
@@ -78,32 +246,35 @@ class Products {
   }
 
 
-  validateForm(form) {
+  validateForm(form, event) {
     // generate sizes array
     form.sizes = form.sizes.split(',').map((item) => item.trim());
 
     // supplier
-    form.supplier = this.getSupplierData();
+    form.supplier = this.getSupplierData(event);
 
     // brand
-    form.brand = this.getBrandData();
+    form.brand = this.getBrandData(event);
     //category
-    form.category = this.getCategoryData();
+    form.category = this.getCategoryData(event);
     return form;
   }
 
-  getSupplierData() {
-    const selectElement = document.getElementById('suppliers-option');
+
+  // YOU NEED TO MAKE THE EDIT PRODUCT WORK FOR ALL TYPES OF ELEMENTS AND THEN CONTINUE IMPLEMENTING THE EDITING SO U WONT HAVE DUPLICATE CODE..
+  getSupplierData(e) {
+    console.log(e.target);
+    const selectElement = e.target.closest('.content-container').querySelector('#suppliers-option');
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     return {
       id: selectedOption.value,
       name: selectedOption.getAttribute('data-supplier-name'),
     };
   }
-  getCategoryData() {
+  getCategoryData(e) {
     const selectedSubCategories = [];
 
-    const selectElement = document.getElementById('category-option');
+    const selectElement = e.target.closest('.content-container').querySelector('#category-option');
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const subCategoryCheckboxes = document.querySelectorAll(
       'input[data-subcategory-name]:checked'
@@ -122,8 +293,8 @@ class Products {
       subcategories: selectedSubCategories,
     };
   }
-  getBrandData() {
-    const selectElement = document.getElementById('brand-option');
+  getBrandData(e) {
+    const selectElement = e.target.closest('.content-container').querySelector('#brand-option');
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     return {
       id: selectedOption.value,
@@ -132,7 +303,7 @@ class Products {
   }
 
   async handleSupplierChange(event) {
-    const brandsSelect = document.querySelector('#brand-option');
+    const brandsSelect = event.target.closest('form').querySelector('#brand-option');
 
     const selectedSupplierId = event.target.value;
     // getting the supplier's brands
@@ -164,8 +335,10 @@ class Products {
   }
 
   async handleCategoriesChange(e) {
+    // get rid of all subcat containers for ambigous problems
+    document.querySelectorAll('.subcategories-container').forEach(container => container.innerHTML = '');
     const selectedCategoryId = e.target.value;
-    const subCategeoriesContainer = document.querySelector(
+    const subCategeoriesContainer = e.target.closest('form').querySelector(
       '.subcategories-container'
     );
 
@@ -233,14 +406,10 @@ class Products {
     this.hideAll();
 
     this.suppliersOption.selectedIndex = 0;
+    this.categoriesOption.selectedIndex = 0;
+    this.addProductContainer.querySelector('#gender-option').selectedIndex = 0;
 
-    const subCategeoriesContainer = document.querySelector(
-      '.subcategories-container'
-    );
-
-    subCategeoriesContainer.innerHTML = '';
-
-    const brandsSelect = document.querySelector('#brand-option').innerHTML = `<option value="" disabled selected>Please select a brand</option>`
+    const brandsSelect = this.addProductContainer.querySelector('#brand-option').innerHTML = `<option value="" disabled selected>Please select a brand</option>`
 
     this.addProductContainer.classList.remove('hidden');
   }
@@ -249,6 +418,8 @@ class Products {
     document.querySelectorAll('.content-container').forEach(container => {
       if (!container.classList.contains('hidden')) container.classList.add('hidden');
     });
+    document.querySelectorAll('.subcategories-container').forEach(container => container.innerHTML = '');
+
   }
 
   async loadProducts() {
@@ -299,6 +470,10 @@ class Products {
                 </p>
             <p class="card-text">Gender: ${product.gender}</p>
           </div>
+          <button type="button" class="btn btn-outline-secondary edit-product-btn">
+                <i class="bi bi-pencil-square"></i>
+                <span class="visually-hidden">Edit Category</span>
+              </button>
         </div>`;
       this.productsContainer.appendChild(productElement);
     });
@@ -334,6 +509,50 @@ class Products {
       this.showMessage('Error adding product..');
       this.renderSpinner();
     }
+  }
+
+  async updateProduct(product, productId) {
+    const feedBackMsgEdit = this.editProductContainer.querySelector('.feedback-message-edit');
+    feedBackMsgEdit.classList.remove('hidden');
+    this.renderSpinner(feedBackMsgEdit, true);
+
+    try {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body:
+          JSON.stringify({ product, prodId: productId })
+        ,
+      });
+
+      if (!response.ok) throw new Error('Failed getting response');
+      await response.json();
+
+      this.renderSpinner(feedBackMsgEdit, false);
+
+      feedBackMsgEdit.innerHTML = `<p class="lean">Successfully updated product!</p>`
+
+      setTimeout(() => {
+        feedBackMsgEdit.classList.add('hidden');
+        this.productsTab.dispatchEvent(new Event('click'));
+        this.editProductForm.reset();
+      }, 500);
+
+    } catch (error) {
+      console.log(error);
+
+      feedBackMsgEdit.innerHTML = `<p class="lean">Error updating product!</p>`
+
+      setTimeout(() => {
+        feedBackMsgEdit.classList.add('hidden');
+        this.productsTab.dispatchEvent(new Event('click'));
+        this.editProductForm.reset();
+      }, 500);
+
+    }
+
   }
 
   async deleteProduct(e) {

@@ -16,5 +16,6 @@ body {
 }
 
 .card {
-  min-height: 275px;
+  height: 100%;
+  
 }

@@ -4,7 +4,8 @@ import {
   getProduct,
   createProduct,
   deleteProduct,
-  getProductsByGender
+  getProductsByGender,
+  updateProduct
 } from './products_api.js';
 
 import {
@@ -42,9 +43,8 @@ import {
 const router = express.Router();
 
 router.route('/products').get(getProducts).post(createProduct);
-router.route('/products/:id').get(getProduct).delete(deleteProduct);
+router.route('/products/:id').get(getProduct).delete(deleteProduct).put(updateProduct);
 router.route('/products/gender/:gender').get(getProductsByGender);
-
 
 router.route('/suppliers').get(getSuppliers).post(createSupplier);
 router.route('/suppliers/:id').get(getSupplier).delete(deleteSupplier);

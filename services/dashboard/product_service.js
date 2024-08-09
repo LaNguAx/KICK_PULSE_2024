@@ -220,6 +220,35 @@ const updateProductsCategoryName = async (category) => {
   }
 };
 
+
+const updateProduct = async (updatedProduct, prodId) => {
+
+  try {
+
+    const oldProduct = await getProduct(prodId);
+
+    oldProduct.name = updatedProduct.name;
+    oldProduct.sizes = updatedProduct.sizes;
+    oldProduct.price = updatedProduct.price;
+    oldProduct.quantity = updatedProduct.quantity;
+    oldProduct.description = updatedProduct.description;
+    oldProduct.supplier = updatedProduct.supplier;
+    oldProduct.image = updatedProduct.image;
+    oldProduct.brand = updatedProduct.brand;
+    oldProduct.category = updatedProduct.category;
+    oldProduct.gender = updatedProduct.gender;
+
+
+    return await oldProduct.save();
+
+  } catch (err) {
+    console.error('Error saving product:', err);
+    throw new Error('Failed to save product');
+  }
+
+
+}
+
 export default {
   getProducts,
   getProduct,
@@ -233,5 +262,6 @@ export default {
   editProduct,
   updateProductsBrandName,
   updateProductsCategoryName,
-  getProductsByGender
+  getProductsByGender,
+  updateProduct
 };
