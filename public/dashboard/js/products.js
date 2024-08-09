@@ -626,6 +626,15 @@ class Products {
 }
 
 // Initialize the Dashboard
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   new Products();
 });
+
+function hidePreLoader() {
+  window.addEventListener('load', function () {
+    const preloader = document.getElementById('preloader');
+    preloader.style.display = 'none';
+  });
+}
+
+hidePreLoader();
