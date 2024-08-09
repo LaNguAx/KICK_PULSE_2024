@@ -298,3 +298,12 @@ class Orders {
 document.addEventListener('DOMContentLoaded', () => {
   new Orders();
 });
+
+function hidePreLoader() {
+  window.addEventListener('load', function () {
+    const preloader = document.getElementById('preloader');
+    preloader.style.display = 'none';
+  });
+}
+
+hidePreLoader();

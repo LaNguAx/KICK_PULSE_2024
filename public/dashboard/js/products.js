@@ -38,6 +38,8 @@ class Products {
     this.editSuppliersOption = this.editProductForm.querySelector('#suppliers-option');
     this.editCategoriesOption = this.editProductForm.querySelector('#category-option');
 
+
+    this.loadProducts();
     this.initEventListeners();
   }
 
@@ -119,7 +121,6 @@ class Products {
     [...document.querySelectorAll('.page-link')][0].classList.add('active');
   }
   async changePage(e) {
-    this.products = await this.loadProducts();
     const productsPerPage = 6; // Number of products per page
     const currentPage = e.target.getAttribute('data-page'); // The page you want to retrieve (e.g., 3rd page)
 
@@ -467,6 +468,7 @@ class Products {
       const response = await fetch(`/api/products/`);
       if (!response.ok) throw new Error('Failed fetching!');
       const result = await response.json();
+      this.products = result.data;
       return result.data;
     } catch (error) {
       this.showMessage(`Error loading products\nError message: ${error}`);
@@ -474,7 +476,6 @@ class Products {
   }
 
   renderProducts(data, limit = 6) {
-    this.products = data;
     this.productsContainer.innerHTML = '';
     if (data.length === 0) {
       this.productsContainer.innerHTML = `<h4>You don't have any products..</h4>`;
@@ -625,6 +626,15 @@ class Products {
 }
 
 // Initialize the Dashboard
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   new Products();
 });
+
+function hidePreLoader() {
+  window.addEventListener('load', function () {
+    const preloader = document.getElementById('preloader');
+    preloader.style.display = 'none';
+  });
+}
+
+hidePreLoader();
