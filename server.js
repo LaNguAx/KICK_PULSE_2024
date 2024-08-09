@@ -1,5 +1,5 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import mongoose, { connect } from 'mongoose';
 import session from 'express-session';
 import dashboardRouter from './routes/dashboard_router.js';
 import apiRouter from './apis/dashboard/dashboard_api_router.js';
@@ -33,14 +33,29 @@ app.use((req, res, next) => res.status(404).redirect('/404'));
 app.set('view engine', 'ejs');
 
 const PORT = process.env.PORT || 3000;
-const connectToDb = async () => {
+const MAX_ATTEMPTS = 3;
+const connectToDb = async (attempts = 3) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
+    attempts = 0;
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
+    if (attempts < MAX_ATTEMPTS) {
+      console.log(`Retrying connection attempt ${retries}/${MAX_RETRIES}...`);
+      setTimeout(connectToDb, 5000); // Retry after 5 seconds
+    } else {
+      console.error('Failed to connect to MongoDB after maximum retries. Exiting...');
+      process.exit(1);
+    }
   }
 };
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected! Trying to reconnect...');
+  connectToDB();
+});
+
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);

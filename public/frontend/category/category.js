@@ -54,13 +54,37 @@ class Category {
 
     const filterPrice = parseInt(document.getElementById('priceRange').value);
 
-    const filteredProducts = products.filter(product => {
 
-      if (filters.find(filter => (filter == product.brand.name || filters.find(filter => filter.toLowerCase() == product.gender) || filters.find(filter => product.sizes.find(size => size == filter))) && product.price <= filterPrice)) {
-        return product;
-      }
+    // Filter and map the elements to get only the checked ones' ids
+    const brandFilters = new Set([...document.querySelectorAll('.filter-brand')]
+      .filter(el => el.checked)  // Only include checked elements
+      .map(el => el.id));        // Map to their ids
 
-    })
+    const genderFilters = new Set([...document.querySelectorAll('.filter-gender')]
+      .filter(el => el.checked)  // Only include checked elements
+      .map(el => el.id));        // Map to their ids
+
+    const sizeFilters = new Set([...document.querySelectorAll('.filter-size')]
+      .filter(el => el.checked)  // Only include checked elements
+      .map(el => el.id));        // Map to their ids
+
+    let filteredProducts = products;
+    if (brandFilters.size > 0)
+      filteredProducts = products.filter(product =>
+        brandFilters.has(product.brand.name));
+
+    if (genderFilters.size > 0)
+      filteredProducts = filteredProducts.filter(product => genderFilters.has(product.gender));
+
+    if (sizeFilters.size > 0) {
+      filteredProducts = filteredProducts.filter(product =>
+        product.sizes.some(size => sizeFilters.has(size))
+      );
+    }
+
+    filteredProducts = filteredProducts.filter(product => product.price <= filterPrice);
+
+
     Main.renderSpinner(this.categoryProductsContainer, false);
 
     //if price range changed and other filters stayed
@@ -71,8 +95,6 @@ class Category {
       return;
 
     }
-
-
 
 
     if (checkedFilters.length == 0) {

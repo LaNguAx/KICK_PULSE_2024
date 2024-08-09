@@ -83,6 +83,7 @@ class Home {
 
     renderProducts(products) {
         let HTML = '';
+        products.splice(3);
         products.forEach(product => {
             HTML += `
             <div class="col product-card" data-product-id="${product._id}">
