@@ -16,6 +16,10 @@ class Products {
   editSuppliersOption;
   editCategoriesOption;
 
+  paginationContainer;
+  products = [];
+
+
   constructor() {
     this.productsTab = document.querySelector('.all-products-tab');
     this.addProductTab = document.querySelector('.add-product-tab');
@@ -27,7 +31,7 @@ class Products {
     this.feedbackMessage = document.querySelector('.feedback-message');
     this.suppliersOption = document.querySelector('#suppliers-option');
     this.categoriesOption = document.querySelector('#category-option');
-
+    this.paginationContainer = document.querySelector('.pagination');
 
     this.editProductContainer = document.querySelector('.edit-product');
     this.editProductForm = document.querySelector('.edit-product-form');
@@ -49,6 +53,8 @@ class Products {
       this.renderSpinner(this.productsContainer, false);
       this.renderProducts(loaded);
 
+      this.resetPagination();
+      this.paginationContainer.classList.remove('hidden');
 
     });
 
@@ -99,6 +105,37 @@ class Products {
 
     this.editProductForm.addEventListener('submit', this.handleEditProductFormSubmit.bind(this));
 
+
+    this.paginationContainer.addEventListener('click', this.handlePaginationContainerClick.bind(this));
+  }
+  async handlePaginationContainerClick(e) {
+    if (!e.target.closest('.page-link')) return;
+
+    await this.changePage(e);
+  }
+
+  resetPagination() {
+    [...document.querySelectorAll('.page-link')].forEach(el => el.classList.remove('active'));
+    [...document.querySelectorAll('.page-link')][0].classList.add('active');
+  }
+  async changePage(e) {
+    this.products = await this.loadProducts();
+    const productsPerPage = 6; // Number of products per page
+    const currentPage = e.target.getAttribute('data-page'); // The page you want to retrieve (e.g., 3rd page)
+
+    [...document.querySelectorAll('.page-link')].forEach(el => el.classList.remove('active'));
+    e.target.classList.add('active');
+
+
+    // Calculate start and end indices
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    console.log(this.products);
+    // Get products for the current page
+    const productsOnPage = this.products.slice(startIndex, endIndex);
+    console.log(productsOnPage)
+    this.renderProducts(productsOnPage);
+
   }
 
   async editProduct(e) {
@@ -108,6 +145,7 @@ class Products {
     document
       .querySelectorAll('.tab')
       .forEach((tab) => tab.classList.remove('active'));
+
 
 
 
@@ -420,6 +458,8 @@ class Products {
     });
     document.querySelectorAll('.subcategories-container').forEach(container => container.innerHTML = '');
 
+    this.paginationContainer.classList.add('hidden');
+
   }
 
   async loadProducts() {
@@ -433,14 +473,18 @@ class Products {
     }
   }
 
-  renderProducts(data) {
+  renderProducts(data, limit = 6) {
+    this.products = data;
     this.productsContainer.innerHTML = '';
     if (data.length === 0) {
       this.productsContainer.innerHTML = `<h4>You don't have any products..</h4>`;
       return;
     }
 
-    data.forEach((product) => {
+    data.forEach((product, idx) => {
+
+      if (idx >= limit) return;
+
       const productElement = document.createElement('div');
       const subCategories = [];
       product.category.subcategories.forEach((subcat) =>

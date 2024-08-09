@@ -70,7 +70,7 @@
         <div class="row products content-container">
           <% if(products.length == 0) { %>
           <h4>You don't have any products..</h4>
-          <% } products.forEach(el => { %>
+          <% } products.forEach((el,idx) => { if(idx >= 6) return; %>
           <div class="col-md-4 col-sm-6 col-12 mb-4">
             <div class="card position-relative" data-product-id="<%=el._id %>">
               <button type="button" class="btn btn-outline-danger delete-product">
@@ -101,7 +101,16 @@
             </div>
           </div>
           <% }); %>
+
         </div>
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link active" data-page="1" href="#">1</a></li>
+          <% 
+            const totalPages = Math.ceil(products.length / 6); // Calculate the total number of pages
+            for (let page = 2; page <= totalPages; page++) { %>
+          <li class="page-item"><a class="page-link" data-page="<%= page %>" href="#"><%= page %></a></li>
+          <% } %>
+        </ul>
         <div class="col add-product content-container hidden">
           <h1 class="text-center mb-4">Add Product</h1>
 
@@ -360,7 +369,6 @@
           </form>
           <div class="feedback-message-edit container text-center mt-4 hidden fs-3"></div>
         </div>
-
       </div>
     </div>
 
