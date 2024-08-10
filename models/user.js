@@ -35,6 +35,10 @@ const UserSchema = new Schema(
     orders: {
       type: [mongoose.Types.ObjectId],
       default: [], // Default to an empty array if no orders are present
+    },
+    role: {
+      type: Boolean,
+      default: false
     }
   },
   {
