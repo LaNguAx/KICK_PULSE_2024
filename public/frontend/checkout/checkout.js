@@ -17,6 +17,7 @@ class Checkout {
     this.checkoutForm = document.querySelector('#checkoutForm');
     this.checkoutFieldsContainer = document.querySelector('#checkout-fields-container');
 
+    this.loadCountriesSelect();
     this.renderCheckoutCart();
     this.initCheckoutEventListeners();
   }
@@ -25,6 +26,36 @@ class Checkout {
     this.checkoutCartContainer.addEventListener('click', this.handleCheckoutCartContainerClick.bind(this));
     this.checkoutForm.addEventListener('submit', this.handleCheckoutFormSubmit.bind(this));
     this.initCCfields();
+  }
+
+  async loadCountriesSelect() {
+    const countriesSelect = this.checkoutForm.querySelector('#country');
+
+    try {
+      // Fetch the countries from the API
+      const response = await fetch('https://restcountries.com/v3.1/region/america');
+      const countries = await response.json();
+
+      // Clear existing options
+      countriesSelect.innerHTML = '<option value="">Choose...</option>';
+
+      // Populate the select element with countries
+      countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country.name.common;
+        option.textContent = country.name.common;
+
+        // Optionally, select "United States" by default
+        if (country.name.common === 'United States') {
+          option.selected = true;
+        }
+
+        countriesSelect.appendChild(option);
+      });
+
+    } catch (error) {
+      console.error('Error loading countries:', error);
+    }
   }
 
   handleCheckoutCartContainerClick(e) {
