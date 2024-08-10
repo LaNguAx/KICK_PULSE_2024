@@ -102,3 +102,14 @@ export async function deleteOrder(req, res) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 }
+
+
+export async function getOrdersGroupedByEmail(req, res) {
+  try {
+    const groupedOrders = await OrderService.getOrdersGroupedByEmail();
+    res.status(200).json({ success: true, data: groupedOrders });
+  } catch (error) {
+    console.error('Error fetching grouped orders:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}

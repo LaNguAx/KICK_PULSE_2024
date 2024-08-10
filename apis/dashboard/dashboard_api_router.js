@@ -29,6 +29,7 @@ import {
   deleteOrder,
   getOrder,
   getOrders,
+  getOrdersGroupedByEmail,
 } from './orders_api.js';
 
 
@@ -68,6 +69,7 @@ router.route('/categories/:id').get(getCategory).delete(deleteCategory).put(upda
 router.route('/categories/products/:id').get(getCategoryProducts);
 
 router.route('/orders').get(getOrders).post(createOrder);
+router.route('/orders/groupby').get(getOrdersGroupedByEmail);
 router.route('/orders/:id').get(getOrder).put(updateOrder).delete(deleteOrder);
 
 router.route('/users').get(getUsers);

@@ -56,19 +56,22 @@ class Users {
 
   async handleUsersTableClick(e) {
 
-    this.searchModalObj.hide();
+    this.searchInput.value = '';
     if (e.target.closest('.view-orders-btn')) {
       await this.viewUserOrders(e.target.closest('tr').getAttribute('data-user-id'));
+      this.searchModalObj.hide();
       return;
     }
 
     if (e.target.closest('.change-role-btn')) {
       await this.changeUserRole(e.target.closest('tr').getAttribute('data-user-id'));
+      this.searchModalObj.hide();
       return;
     }
 
     if (e.target.closest('.delete-user-btn')) {
       await this.deleteUser(e.target.closest('tr').getAttribute('data-user-id'));
+      this.searchModalObj.hide();
       return;
     }
   }
