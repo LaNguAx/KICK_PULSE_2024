@@ -24,6 +24,14 @@ export function alreadyLoggedIn(req, res, next) {
   next();
 }
 
+export function isAdmin(req, res, next) {
+  if (!req.session.role) {
+    return res.redirect('/dashboard/login');
+  }
+  console.log('An admin made this call');
+  next();
+}
+
 export function logout(req, res) {
   req.session.destroy((err) => {
     if (err) {
@@ -44,6 +52,8 @@ export async function login(req, res) {
       req.session.userId = result._id; // Store user ID from the result
       req.session.email = result.email; // Store email from the result
       req.session.name = `${result.firstName} ${result.lastName}`; // Store name from the result
+      if (result.role == true) req.session.role = true;
+
       return res.status(200).json({ message: 'Login successful', user: result });
     } else {
       return res.status(401).json({ error: 'Invalid email or password' });

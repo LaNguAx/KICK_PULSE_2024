@@ -8,7 +8,7 @@ class Header {
   user;
   constructor() {
     this.cart = new Cart();
-    this.search = new Search();
+    // this.search = new Search();
     this.user = new User();
   }
 
