@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   usersIndex
-} from '../controllers/dashboard_controller.js';
+} from '../controllers/dashboard/users_controller.js';
 
 import { productsIndex } from '../controllers/dashboard/products_controller.js';
 import { suppliersIndex } from '../controllers/dashboard/suppliers_controller.js';

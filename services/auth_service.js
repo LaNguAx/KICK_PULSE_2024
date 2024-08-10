@@ -1,3 +1,4 @@
+import OrderService from './dashboard/order_service.js';
 import { UsersModel } from '../models/user.js';
 
 const login = async (email, password) => {
@@ -42,6 +43,16 @@ const getUser = async (email) => {
   return existingUser;
 }
 
+const getUsers = async () => {
+  try {
+    const users = await UsersModel.find();
+    return users;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw new Error('Failed to fetch users');
+  }
+};
+
 const update = async (user) => {
   if (!user.email || !user.firstName || !user.lastName || !user.currentPassword || !user.newPassword) {
     throw new Error('All fields are required.');
@@ -80,11 +91,31 @@ const update = async (user) => {
   }
 };
 
+
+const updateUserRole = async (email) => {
+  try {
+
+    const user = await getUser(email);
+    const currentRole = user.role;
+
+    console.log(currentRole);
+    if (currentRole) user.role = false;
+    else user.role = true;
+
+    await user.save();
+    return user;
+  } catch (e) {
+    console.error('Error updating user role');
+    throw new Error(error.message);
+  }
+}
+
 const updateUserOrders = async (user, orders) => {
   try {
     user.orders = orders;
     await user.save();
 
+    return user;
   } catch (e) {
     console.error('Error updating user orders..', e);
     throw new Error(error.message);
@@ -93,11 +124,39 @@ const updateUserOrders = async (user, orders) => {
 
 const findUserWhoOrderedSpecificOrder = async (email, orderId) => {
   try {
-    const user = await Users.findOne({ email, orders: orderId });
+    const user = await UsersModel.findOne({ email, orders: orderId });
     return user;
   } catch (error) {
     console.error('Error finding user:', error);
     throw error; // Re-throw the error after logging it
+  }
+};
+const deleteUser = async (email) => {
+  if (!email) {
+    throw new Error('Email is required to delete a user.');
+  }
+
+  try {
+    const deletedUser = await UsersModel.findOneAndDelete({ email });
+    if (!deletedUser) {
+      throw new Error('User not found.');
+    }
+
+    // Iterate through the user's orders and delete each one
+    for (const orderId of deletedUser.orders) {
+      try {
+        await OrderService.deleteOrder(orderId);
+      } catch (orderError) {
+        console.error(`Failed to delete order ${orderId}:`, orderError);
+      }
+    }
+
+    console.log('User deleted successfully:', deletedUser);
+    return deletedUser;
+
+  } catch (error) {
+    console.error('Error during deletion:', error);
+    throw new Error('Failed to delete user.');
   }
 };
 
@@ -107,6 +166,9 @@ export default {
   register,
   update,
   getUser,
+  getUsers,
   updateUserOrders,
-  findUserWhoOrderedSpecificOrder
+  findUserWhoOrderedSpecificOrder,
+  deleteUser,
+  updateUserRole
 };

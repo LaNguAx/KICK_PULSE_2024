@@ -1,3 +1,4 @@
+import AuthService from '../auth_service.js';
 import { OrdersModel } from '../../models/dashboard/order.js';
 
 const getOrders = async () => {
@@ -52,6 +53,14 @@ const deleteOrder = async (id) => {
   try {
     const deletedOrder = await OrdersModel.findByIdAndDelete(id);
     if (!deletedOrder) throw new Error('Order not found');
+
+    const userWhoOrdered = await AuthService.findUserWhoOrderedSpecificOrder(deletedOrder.orderedBy, id);
+    if (userWhoOrdered) {
+      // Remove the order ID from the user's orders array
+      const newOrders = userWhoOrdered.orders.filter(orderId => orderId.toString() !== id.toString());
+      await AuthService.updateUserOrders(userWhoOrdered, newOrders);
+    }
+
     return deletedOrder;
   } catch (err) {
     console.error(`Error deleting order with ID ${id}:`, err);

@@ -1,7 +1,17 @@
 import AuthService from '../services/auth_service.js';
 
-export function mustLogin(req, res, next) {
+export async function mustLogin(req, res, next) {
   if (req.session.userId) {
+    if (!await AuthService.getUser(req.session.email)) {
+      return req.session.destroy((err) => {
+        if (err) {
+          console.error('Error during logout:', err);
+          return res.status(500).json({ error: 'Error during logout' });
+        } else {
+          return res.redirect('/login');
+        }
+      });
+    }
     return next();
   }
   res.redirect('/login');
@@ -64,9 +74,9 @@ export async function register(req, res) {
 }
 
 export async function updateUser(req, res) {
-  const { firstName, lastName, email, newEmail, currentPassword, newPassword } = req.body;
-  const user = { firstName, lastName, email, newEmail, currentPassword, newPassword };
-
+  const { firstName, lastName, email, newEmail, currentPassword, newPassword, role } = req.body;
+  const user = { firstName, lastName, email, newEmail, currentPassword, newPassword, role };
+  console.log(user);
   try {
     const updatedUser = await AuthService.update(user);
     if (!updatedUser)

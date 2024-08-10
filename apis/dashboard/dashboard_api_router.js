@@ -40,6 +40,15 @@ import {
   getCategory,
   getCategoryProducts,
 } from './categories_api.js';
+
+import {
+  getUser,
+  getUsers,
+  deleteUser,
+  updateUser,
+  updateUserRole
+} from './users_api.js';
+
 const router = express.Router();
 
 router.route('/products').get(getProducts).post(createProduct);
@@ -60,5 +69,10 @@ router.route('/categories/products/:id').get(getCategoryProducts);
 
 router.route('/orders').get(getOrders).post(createOrder);
 router.route('/orders/:id').get(getOrder).put(updateOrder).delete(deleteOrder);
+
+router.route('/users').get(getUsers);
+router.route('/users/:email').get(getUser).delete(deleteUser).put(updateUser);
+router.route('/users/:email/role').put(updateUserRole);
+
 
 export default router;
