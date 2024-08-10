@@ -32,9 +32,9 @@ app.use((req, res, next) => res.status(404).redirect('/404'));
 
 
 /* LEFT TO DO:
-  1. search dashboard&client
-  2. search users
-  3. GROUPBY orders locations countries
+  1. search dashboard&client -
+  2. search users -
+  3. GROUPBY orders locations countries -
   4. dashboard login system
   5. canvas
   6. graphs

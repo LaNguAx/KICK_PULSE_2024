@@ -95,11 +95,30 @@ const getOrdersByIds = async (orderIds) => {
   }
 }
 
+const getOrdersGroupedByEmail = async () => {
+  try {
+    const groupedOrders = await OrdersModel.aggregate([
+      {
+        $group: {
+          _id: '$email',
+          orders: { $push: '$$ROOT' }
+        }
+      }
+    ]);
+    return groupedOrders;
+  } catch (err) {
+    console.error('Error grouping orders by email:', err);
+    throw new Error('Failed to group orders');
+  }
+};
+
+
 export default {
   getOrders,
   getOrder,
   createOrder,
   deleteOrder,
   updateOrder,
-  getOrdersByIds
+  getOrdersByIds,
+  getOrdersGroupedByEmail
 };

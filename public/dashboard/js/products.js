@@ -1,5 +1,4 @@
-import Search from '../../frontend/search.js';
-
+import Main from '../../frontend/main.js';
 class Products {
   productsTab;
   addProductTab;
@@ -166,8 +165,13 @@ class Products {
   handleSearchClick(e) {
     e.preventDefault();
 
-    if (this.products.length == 0)
+
+    if (this.products.length == 0 || this.searchInput.value.length == 0) {
+
+      Main.renderMessage(document.querySelector('#searchInput').parentElement, true, 'No products found..', 'afterbegin');
+      setTimeout(() => Main.renderMessage(document.querySelector('#searchInput').parentElement, false), 1000);
       return;
+    }
 
     this.searchModalObj.show();
 
