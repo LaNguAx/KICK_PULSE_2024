@@ -78,7 +78,7 @@ class Category {
 
     if (sizeFilters.size > 0) {
       filteredProducts = filteredProducts.filter(product =>
-        product.sizes.some(size => sizeFilters.has(size))
+        product.sizes.some(size => sizeFilters.has(Math.floor(parseFloat(size)).toString()))
       );
     }
 
