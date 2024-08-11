@@ -5,6 +5,7 @@ class Stores {
   constructor() {
     this.initMap();
   }
+
   async initMap() {
     // Request needed libraries.
     const { Map } = await google.maps.importLibrary("maps");
@@ -24,14 +25,11 @@ class Stores {
     // Initialize the Places service
     const service = new google.maps.places.PlacesService(map);
 
-    // Array of place names to search for
-    const placeNames = [
-      "Biscayne Blvd, Aventura, FL",
-      "Ocean Drive, Miami Beach, FL",
-      "Broadway, New York, NY",
-      "Sunset Blvd, Los Angeles, CA",
-      "Pike St, Seattle, WA"
-    ];
+    // Fetch branch data from the API
+    const branches = await this.fetchBranches();
+
+    // Extract location data from the branches
+    const placeNames = branches.map(branch => branch.location);
 
     // Function to handle the Places API response
     function handleSearchResult(results, status) {
@@ -65,13 +63,29 @@ class Stores {
     });
   }
 
-
-
-
-
+  async fetchBranches() {
+    try {
+      const response = await fetch('/api/branches');
+      const data = await response.json();
+      if (data.success) {
+        return data.data;
+      } else {
+        console.error('Failed to fetch branches:', data.message);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching branches:', error);
+      return [];
+    }
+  }
 }
+function initStores() {
+  window.addEventListener('load', function () {
+    new Stores();
+  });
+}
+initStores();
 
-
-Main.initComponents([Header, Stores]);
+Main.initComponents([Header]);
 
 Main.hidePreLoader();

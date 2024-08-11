@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="/frontend/main.css">
   <link rel="stylesheet" href="/frontend/profile/orders/orders.css">
+
   <title>KickPulse My Orders</title>
 </head>
 
@@ -20,15 +21,14 @@
 
   <div class="content">
     <%- include('../components/header') %>
-
     <main class="container-fluid mb-5 d-flex flex-column justify-content-center align-items-center">
       <h1 class="mt-5">My Orders</h1>
 
       <% if (orders.length === 0) { %>
       <p class="text-muted">You have not placed any orders yet.</p>
       <% } else { %>
-      <p class="lead">Welcome, <%= session.name %>!<br>Here are your orders:</p>
-      <div class="table-responsive w-75">
+      <p class="lead text-center">Welcome, <%= session.name %>!<br>Here are your orders:</p>
+      <div class="table-responsive w-100">
         <table class="table table-striped table-hover">
           <thead class="table-dark">
             <tr>
@@ -42,18 +42,18 @@
           <tbody>
             <% orders.forEach(order => { %>
             <tr>
-              <td><%= order._id %></td>
+              <td style="word-wrap: break-word; max-width: 80px;"><%= order._id %></td>
               <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
               <td>
                 <div class="d-flex flex-column">
                   <% order.cart.forEach(item => { %>
-                  <div class="d-flex align-items-center mb-2">
+                  <div class="d-flex align-items-start mb-2">
                     <img src="<%= item.img %>" alt="<%= item.title %>" class="img-fluid me-3"
-                      style="width: 50px; height: 50px;">
-                    <div>
+                      style="width: 40px; height: 40px; object-fit: cover;">
+                    <div class="item-details">
                       <strong><%= item.quantity %> x <%= item.title %></strong><br>
-                      Size: <%= item.size %><br>
-                      Price: $<%= item.price.toFixed(2) %>
+                      <span>Size: <%= item.size %></span><br>
+                      <span>Price: $<%= item.price.toFixed(2) %></span>
                     </div>
                   </div>
                   <% }) %>
@@ -68,6 +68,8 @@
       </div>
       <% } %>
     </main>
+
+
 
     <%- include('../components/footer') %>
 

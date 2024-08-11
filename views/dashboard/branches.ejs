@@ -7,8 +7,16 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" />
+
   <link rel="stylesheet" href="/dashboard/css/dashboard.css" />
-  <title>KickPulse Dashboard</title>
+
+  <style>
+    .label {
+      font-size: 0.7rem;
+    }
+  </style>
+
+  <title>KickPulse Analytics</title>
 </head>
 
 <body>
@@ -50,13 +58,13 @@
                 <a class="nav-link" href="/dashboard/orders">Orders</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="/dashboard/brands">Brands</a>
+                <a class="nav-link" href="/dashboard/brands">Brands</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link " href="/dashboard/categories">Categories</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/dashboard/branches">Branches</a>
+                <a class="nav-link active" href="/dashboard/branches">Branches</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/dashboard/analytics">Analytics</a>
@@ -70,95 +78,90 @@
       </nav>
     </div>
   </div>
-  <div class="text-center mt-5">
+  <!-- <div class="text-center mt-5">
     <h5>Warning: Deleting a brand will DELETE all of it's products & delete it from all suppliers who are supplying this
       brand.</h5>
     <h6>Note: Changing brand name will CHANGE the name in all products by this brand & suppliers who are supplying this
       brand.</h6>
-  </div>
+  </div> -->
 
   <main class="container mt-5 mb-5">
     <div class="row">
       <div class="list-group col-lg-2 col-sm-3 tabs-container">
-        <a class="list-group-item list-group-item-action active tab all-brands-tab" id="list-home-list"
-          data-toggle="list" href="#all_brands" role="tab" aria-controls="home">All Brands</a>
-        <a class="list-group-item list-group-item-action tab add-brand-tab" id="list-profile-list" data-toggle="list"
-          href="#add_brands" role="tab" aria-controls="profile">Add Brand</a>
+        <a class="list-group-item list-group-item-action active tab all-branches-tab" id="list-profile-list"
+          data-toggle="list" href="#all-branches" role="tab" data-container="all-branches" aria-controls="profile">All
+          Branches</a>
+        <a class="list-group-item list-group-item-action  tab add-branch-tab" id="list-home-list" data-toggle="list"
+          href="#add-branch" role="tab" data-container="add-branch" aria-controls="home">Add Branch</a>
 
       </div>
       <div class="col-8 main-content">
-        <div class="row brands content-container">
+        <div class="row content-container">
 
-          <% if (brands.length == 0) { %>
-          <h4>You don't have any brands..</h4>
-          <% } brands.forEach(brand => { %>
-          <div class="col-md-3 col-sm-6 col-12 mb-4">
-            <div class="card position-relative" data-brand-id="<%= brand._id %>">
-              <button type="button" class="btn btn-outline-danger delete-brand">
-                X
-              </button>
-              <div class="card-body">
-                <h5 class="card-title"><%= brand.name %></h5>
-                <p class="card-text">Brand ID: <%= brand._id %></p>
+          <div class="container all-branches-container branches">
+            <div class="row">
+              <% if(branches.length === 0) { %>
+              <h4 class="">You don't have any branches yet..</h4>
+              <% } else { %>
+              <% branches.forEach(branch => { %>
+              <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= branch.name %></h5>
+                    <p class="card-text">
+                      <strong>Location:</strong> <%= branch.location %><br>
+                      <strong>Created At:</strong> <%= new Date(branch.createdAt).toLocaleDateString() %>
+                    </p>
+                  </div>
+                  <div class="card-footer text-center">
+                    <button class="btn btn-danger delete-branch-btn" data-branch-id="<%= branch._id %>">Delete
+                      Branch</button>
+                  </div>
+                </div>
               </div>
-              <button type="button" class="btn btn-outline-secondary edit-brand-btn">
-                <i class="bi bi-pencil-square"></i>
-                <span class="visually-hidden">Edit Brand</span>
-              </button>
+              <% }) %>
+              <% } %>
             </div>
           </div>
-          <% }); %>
+
+
+
+          <div class="container add-branch-container hidden branches p-4 border rounded shadow-sm ">
+            <h2 class="mb-4 text-center">Add New Branch</h2>
+            <form id="addBranchForm">
+              <div class="mb-3">
+                <label for="branchName" class="form-label">Branch Name</label>
+                <input type="text" class="form-control" id="branchName" name="name" placeholder="Enter branch name"
+                  required>
+              </div>
+              <div class="mb-3">
+                <label for="branchLocation" class="form-label">Branch Location</label>
+                <input type="text" class="form-control" id="branchLocation" name="location"
+                  placeholder="Enter branch location" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Branch</button>
+            </form>
+
+          </div>
+
 
         </div>
-
-
-        <div class="col add-brand content-container hidden">
-          <h1 class="text-center mb-4">Add Brand</h1>
-
-          <form class="row add-brand-form align-items-center flex-column" action="/api/brands" method="POST">
-            <div class="col-6 mb-3 ">
-              <label for="name" class="form-label">Brand name</label>
-              <input type="text" class="form-control" name="name" id="name" value="test1" placeholder="" required>
-            </div>
-            <div class="d-flex align-items-center justify-content-center form-btns-container">
-              <button type="submit" class="btn btn-primary mx-auto">
-                Add & Save Brand
-              </button>
-            </div>
-          </form>
-          <div class="feedback-message container text-center mt-4 hidden fs-3"></div>
-        </div>
-
-
-
-        <!-- EDIT -->
-        <div class="col edit-brand content-container hidden">
-          <h1 class="text-center mb-4">Edit Brand</h1>
-
-          <form class="row edit-brand-form align-items-center flex-column" action="/api/brands" method="PUT">
-            <div class="col-6 mb-3 ">
-              <label for="name" class="form-label">Brand name</label>
-              <input type="text" class="form-control" name="name" id="name" value="test1" placeholder="" required>
-            </div>
-            <div class="d-flex align-items-center justify-content-center form-btns-container">
-              <button type="submit" class="btn btn-primary mx-auto">
-                Edit & Save Brand
-              </button>
-            </div>
-          </form>
-          <div class="feedback-message container text-center mt-4 hidden fs-3"></div>
-        </div>
-
       </div>
-    </div>
 
   </main>
 
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=<%= key%>&libraries=places" async defer></script> -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap" async defer></script> -->
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=<%= key %>&amp;loading=async&amp;libraries=places" async
+    defer="">
+    </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script src="/dashboard/js/brands.js"></script>
+
+  <script type="module" src="/dashboard/js/branches.js"></script>
 </body>
 
 </html>
