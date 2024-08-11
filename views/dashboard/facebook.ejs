@@ -8,15 +8,10 @@
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="/dashboard/css/dashboard.css" />
-  <script src="https://d3js.org/d3.v6.min.js"></script>
 
-  <style>
-    .label {
-      font-size: 0.7rem;
-    }
-  </style>
 
-  <title>KickPulse Analytics</title>
+
+  <title>KickPulse Facebook API</title>
 </head>
 
 <body>
@@ -64,10 +59,10 @@
                 <a class="nav-link " href="/dashboard/categories">Categories</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="/dashboard/analytics">Analytics</a>
+                <a class="nav-link " href="/dashboard/analytics">Analytics</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link " href="/dashboard/facebook">Facebook</a>
+                <a class="nav-link active" href="/dashboard/facebook">Facebook</a>
               </li>
             </ul>
           </div>
@@ -85,21 +80,53 @@
   <main class="container mt-5 mb-5">
     <div class="row">
       <div class="list-group col-lg-2 col-sm-3 tabs-container">
-        <a class="list-group-item list-group-item-action active tab monthly-revenue-tab" id="list-profile-list"
-          data-toggle="list" href="#monthly-revenue" role="tab" data-chart="revenue" aria-controls="profile">Monthly
-          Revenue</a>
-        <a class="list-group-item list-group-item-action  tab monthly-orders-tab" id="list-home-list" data-toggle="list"
-          href="#monthly-orders" role="tab" data-chart="orders" aria-controls="home">Monthly
-          Orders</a>
+        <a class="list-group-item list-group-item-action active tab facebook-api-tab" id="list-profile-list"
+          data-toggle="list" href="#post_on_facebook" role="tab" data-container="post-on-facebook"
+          aria-controls="profile">Post On Facebook</a> <a
+          class="list-group-item list-group-item-action tab facebook-api-tab" id="list-profile-list" data-toggle="list"
+          href="#show_facebook_posts" role="tab" data-container="show-posts" aria-controls="profile">Show Facebook
+          Posts</a>
 
       </div>
       <div class="col-8 main-content">
         <div class="row content-container">
-          <div class="chart" id="revenue-chart"></div>
-          <div class="chart hidden" id="orders-chart"></div>
+          <div class="facebook-api-container" data-container="post-on-facebook" id="post-on-facebook">
+            <form id="facebookPostForm" class="p-3 border rounded">
+              <div class="mb-3">
+                <label for="postContent" class="form-label">Post Content:</label>
+                <textarea id="postContent" name="content" class="form-control" required></textarea>
+              </div>
 
+              <div class="mb-3">
+                <label for="productSelect" class="form-label">Select Product:</label>
+                <select id="productSelect" name="product" class="form-select" required>
+                  <option value="" disabled selected>Select a product...</option>
+                </select>
+              </div>
+
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="includeProductName" checked>
+                <label class="form-check-label" for="includeProductName">Include Product Name</label>
+              </div>
+
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="includeProductPrice" checked>
+                <label class="form-check-label" for="includeProductPrice">Include Product Price</label>
+              </div>
+
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="includeProductSizes" checked>
+                <label class="form-check-label" for="includeProductSizes">Include Available Sizes</label>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Post to Facebook</button>
+            </form>
+          </div>
+          <div class="facebook-api-container" id="show-posts" data-container="show-posts">
+
+
+          </div>
         </div>
-      </div>
 
   </main>
 
@@ -108,7 +135,7 @@
     crossorigin="anonymous"></script>
   <script src="https://d3js.org/d3.v6.min.js"></script>
 
-  <script type="module" src="/dashboard/js/analytics.js"></script>
+  <script type="module" src="/dashboard/js/facebook.js"></script>
 </body>
 
 </html>

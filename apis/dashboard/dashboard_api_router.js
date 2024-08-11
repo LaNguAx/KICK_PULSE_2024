@@ -80,5 +80,8 @@ router.route('/users').get(getUsers);
 router.route('/users/:email').get(getUser).delete(isAdmin, deleteUser).put(isAdmin, updateUser);
 router.route('/users/:email/role').put(isAdmin, updateUserRole);
 
+router.route('/token').get(isAdmin, (req, res) => {
+  return res.json({ token: process.env.FACEBOOK_API_KEY })
+})
 
 export default router;

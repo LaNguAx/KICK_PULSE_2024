@@ -9,6 +9,7 @@ class Stores {
     // Request needed libraries.
     const { Map } = await google.maps.importLibrary("maps");
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    const { PlacesService } = await google.maps.importLibrary("places");
 
     // Center point for the map
     const centerLatlng = { lat: 25.7617, lng: -80.1918 }; // Centered around Miami, FL
@@ -20,30 +21,52 @@ class Stores {
       mapId: "DEMO_MAP_ID",
     });
 
-    // Array of locations to be marked
-    const locations = [
-      { lat: 25.9579, lng: -80.1391, title: "Miami Store - Aventura" }, // Biscayne Blvd, Aventura, FL
-      { lat: 25.790654, lng: -80.1300455, title: "Miami Store - Ocean Drive" }, // Ocean Drive, Miami Beach, FL
-      { lat: 40.7590, lng: -73.9845, title: "New York Times Square Store" }, // Broadway, New York, NY
-      { lat: 34.0983, lng: -118.3267, title: "Los Angeles Store" }, // Sunset Blvd, Los Angeles, CA
-      { lat: 47.6097, lng: -122.3331, title: "Seattle Store" } // Pike St, Seattle, WA
+    // Initialize the Places service
+    const service = new google.maps.places.PlacesService(map);
+
+    // Array of place names to search for
+    const placeNames = [
+      "Biscayne Blvd, Aventura, FL",
+      "Ocean Drive, Miami Beach, FL",
+      "Broadway, New York, NY",
+      "Sunset Blvd, Los Angeles, CA",
+      "Pike St, Seattle, WA"
     ];
 
-    // Loop through locations and add markers
-    locations.forEach((location) => {
-      const marker = new google.maps.marker.AdvancedMarkerElement({
-        position: location,
-        map,
-        title: location.title,
-      });
+    // Function to handle the Places API response
+    function handleSearchResult(results, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results.forEach(result => {
+          const marker = new google.maps.marker.AdvancedMarkerElement({
+            position: result.geometry.location,
+            map,
+            title: result.name,
+          });
 
-      // Add click listener to each marker
-      marker.addListener("click", () => {
-        map.setZoom(8);
-        map.setCenter(marker.position);
-      });
+          // Add click listener to each marker
+          marker.addListener("click", () => {
+            map.setZoom(8);
+            map.setCenter(marker.position);
+          });
+        });
+      } else {
+        console.error(`Places search was not successful: ${status}`);
+      }
+    }
+
+    // Loop through place names and perform a Text Search request for each
+    placeNames.forEach(placeName => {
+      const request = {
+        query: placeName,
+        fields: ["name", "geometry"],
+      };
+
+      service.textSearch(request, handleSearchResult);
     });
   }
+
+
+
 
 
 }
