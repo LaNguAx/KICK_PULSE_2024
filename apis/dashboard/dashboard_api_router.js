@@ -52,6 +52,15 @@ import {
   updateUserRole
 } from './users_api.js';
 
+import {
+  createBranch,
+  updateBranch,
+  deleteBranch,
+  getBranch,
+  getBranches,
+  getBranchByName,
+} from './branches_api.js';
+
 import { isAdmin } from '../../controllers/auth_Controller.js';
 
 const router = express.Router();
@@ -67,6 +76,11 @@ router.route('/suppliers/:id/brands').get(getSupplierBrands);
 router.route('/brands').get(getBrands).post(isAdmin, createBrand);
 router.route('/brands/:id').get(getBrand).put(isAdmin, updateBrand).delete(isAdmin, deleteBrand);
 router.route('/brands/products/:name').get(getProductsByBrandName)
+
+router.route('/branches').get(getBranches).post(isAdmin, createBranch);
+router.route('/branches/:id').get(getBranch).put(isAdmin, updateBranch).delete(isAdmin, deleteBranch);
+router.route('/branches/name/:name').get(getBranchByName);
+
 
 router.route('/categories').get(getCategories).post(isAdmin, createCategory);
 router.route('/categories/:id').get(getCategory).delete(isAdmin, deleteCategory).put(isAdmin, updateCategory);
