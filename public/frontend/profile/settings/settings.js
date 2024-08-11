@@ -67,7 +67,7 @@ class Settings {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update user');
+        throw new Error(errorData.error || errorData.message);
       }
 
       const data = await response.json();

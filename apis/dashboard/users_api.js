@@ -45,7 +45,16 @@ export async function updateUser(req, res) {
   const { email } = req.params;
   const newUserData = { ...req.body };
   try {
-    
+
+    console.log(newUserData)
+    if (newUserData.newEmail) {
+      const newEmailExists = await AuthService.getUser(newUserData.newEmail);
+      if (newEmailExists) {
+        return res.status(403).json({ success: false, message: 'New email is already in use!' })
+
+      }
+    }
+
     const updatedUser = await AuthService.update(newUserData);
     if (!updatedUser) {
       return res
@@ -63,7 +72,7 @@ export async function updateUser(req, res) {
 export async function updateUserRole(req, res) {
   const { email } = req.params;
   try {
-    
+
     const updatedUser = await AuthService.updateUserRole(email);
     if (!updatedUser) {
       return res

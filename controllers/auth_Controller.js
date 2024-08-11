@@ -86,8 +86,17 @@ export async function register(req, res) {
 export async function updateUser(req, res) {
   const { firstName, lastName, email, newEmail, currentPassword, newPassword, role } = req.body;
   const user = { firstName, lastName, email, newEmail, currentPassword, newPassword, role };
-  console.log(user);
   try {
+
+    if (user.newEmail) {
+      const newEmailExists = await AuthService.getUser(user.newEmail);
+      if (newEmailExists) {
+        return res.status(403).json({ success: false, message: 'New email is already in use!' })
+
+      }
+    }
+
+
     const updatedUser = await AuthService.update(user);
     if (!updatedUser)
       return res.status(404).json({ error: 'User not found with this email.' });

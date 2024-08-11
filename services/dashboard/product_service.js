@@ -256,7 +256,7 @@ const getProductsByBrandName = async (brandName) => {
       'brand.name': new RegExp('^' + brandName + '$', 'i') // Case-insensitive search for brand name
     });
 
-    if (products.length === 0) throw new Error('No products found for the specified brand');
+    if (products.length === 0) null;
 
     return products;
   } catch (err) {

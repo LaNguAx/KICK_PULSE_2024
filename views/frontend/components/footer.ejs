@@ -58,4 +58,25 @@
       </ul>
     </div>
   </div>
+  <div class="d-flex justify-content-center">
+    <canvas id="originalsCanvas" width="300" height="150"></canvas>
+
+  </div>
+  <script>
+    const canvas = document.getElementById('originalsCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set background color
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Set text style
+    ctx.font = 'bold 30px Arial';
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Draw the text on the canvas
+    ctx.fillText('Originals', canvas.width / 2, canvas.height / 2);
+  </script>
 </footer>
