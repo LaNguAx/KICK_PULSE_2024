@@ -96,10 +96,18 @@ class Checkout {
     this.checkoutCart = Cart.getCart();
     this.checkoutCartContainer.querySelector('.badge').innerText = this.checkoutCart.length;
 
+    const emptyCartMessage = this.checkoutCartContainer.querySelector('.empty-cart-message');
+
     if (this.checkoutCart.length == 0) {
-      table.parentElement.insertAdjacentHTML('beforebegin', `<p class="lean">Your cart is empty..</p>`);
+      if (!emptyCartMessage) {
+        table.parentElement.insertAdjacentHTML('beforebegin', `<p class="lean empty-cart-message">Your cart is empty..</p>`);
+      }
       this.checkoutCartContainer.querySelector('.cart-total').innerText = `$0.00`;
       return;
+    }
+
+    if (emptyCartMessage) {
+      emptyCartMessage.remove();
     }
 
     let total = this.checkoutCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
