@@ -30,6 +30,7 @@ import {
   getOrder,
   getOrders,
   getOrdersGroupedByEmail,
+  getOrdersInAscOrder,
 } from './orders_api.js';
 
 
@@ -72,6 +73,7 @@ router.route('/categories/products/:id').get(getCategoryProducts);
 
 router.route('/orders').get(getOrders).post(createOrder);
 router.route('/orders/groupby').get(getOrdersGroupedByEmail);
+router.route('/orders/asc').get(getOrdersInAscOrder);
 router.route('/orders/:id').get(getOrder).put(isAdmin, updateOrder).delete(isAdmin, deleteOrder);
 
 router.route('/users').get(getUsers);

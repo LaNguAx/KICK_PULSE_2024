@@ -113,3 +113,15 @@ export async function getOrdersGroupedByEmail(req, res) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 }
+
+// Get all orders in ascending order by creation date
+export async function getOrdersInAscOrder(req, res) {
+  try {
+    const orders = await OrderService.getOrdersInAscOrder();
+    res.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+

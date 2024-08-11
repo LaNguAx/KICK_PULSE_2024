@@ -8,6 +8,7 @@ import { suppliersIndex } from '../controllers/dashboard/suppliers_controller.js
 import { brandsIndex } from '../controllers/dashboard/brands_controller.js';
 import { ordersIndex } from '../controllers/dashboard/orders_controller.js';
 import { categoriesIndex } from '../controllers/dashboard/categories_controller.js';
+import { analyticsIndex } from '../controllers/dashboard/analytics_controller.js';
 
 const router = express.Router();
 
@@ -26,5 +27,7 @@ router.route('/users').get(isAdmin, usersIndex);
 router.route('/orders').get(isAdmin, ordersIndex);
 
 router.route('/brands').get(isAdmin, brandsIndex);
+
+router.route('/analytics').get(isAdmin, analyticsIndex)
 
 export default router;
