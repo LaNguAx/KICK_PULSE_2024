@@ -17,7 +17,6 @@ export async function getIndex(req, res) {
       categoryProducts,
       brands,
       session: req.session,
-      brandNames
     });
   }
   catch (e) {
