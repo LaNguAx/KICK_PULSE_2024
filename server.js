@@ -31,17 +31,6 @@ app.use('/', frontEndRouter);
 app.use((req, res, next) => res.status(404).redirect('/404'));
 
 
-/* LEFT TO DO:
-  1. search dashboard&client -
-  2. search users -
-  3. GROUPBY orders locations countries -
-  4. dashboard login system
-  5. canvas
-  6. graphs
-  7. web service
-  8. maps
-  9. facebook api
-*/
 app.set('view engine', 'ejs');
 
 const PORT = process.env.PORT || 3000;
@@ -65,7 +54,7 @@ const connectToDb = async (attempts = 3) => {
 
 mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected! Trying to reconnect...');
-  connectToDB();
+  connectToDb();
 });
 
 
@@ -81,11 +70,11 @@ MONGO_URI=mongodb+srv://itayakni:kick.pulse.c  s@cluster0.yl5rjk1.mongodb.net/ki
 
 /* LEFT TO DO:
   1. search dashboard&client
-  2. search users
-  3. GROUPBY orders locations countries
-  4. dashboard login system
+  2. search users -
+  3. GROUPBY orders locations countries -
+  4. dashboard login system - 
   5. canvas
-  6. graphs
+  6. graphs -
   7. web service
   8. maps
   9. facebook api

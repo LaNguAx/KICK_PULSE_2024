@@ -112,6 +112,15 @@ const getOrdersGroupedByEmail = async () => {
   }
 };
 
+const getOrdersInAscOrder = async () => {
+  try {
+    return await OrdersModel.find().sort({ createdAt: 1 }); // 1 for ascending order
+  } catch (err) {
+    console.error('Error retrieving orders in ascending order:', err);
+    throw new Error('Failed to retrieve orders');
+  }
+};
+
 
 export default {
   getOrders,
@@ -120,5 +129,6 @@ export default {
   deleteOrder,
   updateOrder,
   getOrdersByIds,
-  getOrdersGroupedByEmail
+  getOrdersGroupedByEmail,
+  getOrdersInAscOrder
 };
