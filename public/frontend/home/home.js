@@ -83,7 +83,7 @@ class Home {
 
     renderProducts(products) {
         let HTML = '';
-        products.splice(3);
+        products.splice(4);
         products.forEach(product => {
             HTML += `
             <div class="col product-card" data-product-id="${product._id}">
@@ -110,7 +110,7 @@ class Home {
 
 }
 
-Main.initComponents([Header, QuickView, FormValidator, Home]);
+Main.initComponents([Header, FormValidator, Home]);
 
 Main.hidePreLoader();
 

@@ -171,6 +171,6 @@ class Category {
 }
 
 
-Main.initComponents([Header, QuickView, Category]);
+Main.initComponents([Header, Category]);
 
 Main.hidePreLoader();

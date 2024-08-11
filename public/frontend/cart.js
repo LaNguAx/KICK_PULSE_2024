@@ -123,7 +123,7 @@ class Cart {
 
 
     this.cartModal.querySelector('.modal-footer > span').classList.remove('hidden');
-    this.cartModal.querySelector('.modal-footer > span').innerText = `Product was sucessfully removed`;
+    this.cartModal.querySelector('.modal-footer > span').innerText = `Item removed`;
 
     // msg.classList.add('me-auto', 'fs-5');
     setTimeout(() => {

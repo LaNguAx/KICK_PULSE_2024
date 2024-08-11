@@ -72,6 +72,6 @@ class Login {
 }
 
 
-Main.initComponents([Header, QuickView, Login, FormValidator]);
+Main.initComponents([Header, Login, FormValidator]);
 
 Main.hidePreLoader();

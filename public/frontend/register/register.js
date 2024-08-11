@@ -81,6 +81,6 @@ class Register {
 }
 
 
-Main.initComponents([Header, QuickView, Register, FormValidator]);
+Main.initComponents([Header, Register, FormValidator]);
 
 Main.hidePreLoader();
