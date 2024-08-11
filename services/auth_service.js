@@ -73,8 +73,15 @@ const update = async (user) => {
     existingUser.firstName = user.firstName;
     existingUser.lastName = user.lastName;
     existingUser.password = user.newPassword;
-    if (user.newEmail)
+    if (user.newEmail) {
+      // update orders that had the previous email
+      const userOrders = await OrderService.getOrdersByIds(existingUser.orders);
+      for (const order of userOrders) {
+        order.orderedBy = user.newEmail;
+        await order.save();
+      }
       existingUser.email = user.newEmail;
+    }
 
     if (user.orders)
       existingUser.orders = user.orders;

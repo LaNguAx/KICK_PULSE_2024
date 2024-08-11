@@ -126,6 +126,11 @@ class Cart {
     this.cartModal.querySelector('.modal-footer > span').innerText = `Item removed`;
 
     // msg.classList.add('me-auto', 'fs-5');
+
+    if (window.location.pathname === '/checkout') {
+      return location.reload();
+    }
+
     setTimeout(() => {
       this.cartModalObj.hide();
 
