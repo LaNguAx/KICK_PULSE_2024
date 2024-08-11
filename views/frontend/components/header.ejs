@@ -18,8 +18,8 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item disabled" href="#">Welcome <%= session.name %></a></li>
               <hr class="dropdown-divider">
-              <li><a class="dropdown-item" href="/profile">Profile</a></li>
-              <li><a class="dropdown-item" href="/profile/orders">Orders</a></li>
+              <!-- <li><a class="dropdown-item" href="/profile">Profile</a></li> -->
+              <li><a class="dropdown-item" href="/profile/orders">My Orders</a></li>
               <li><a class="dropdown-item" href="/profile/settings">Settings</a></li>
               <hr class="dropdown-divider">
               <li><a class="dropdown-item" href="/logout">Log out</a></li>
@@ -59,8 +59,15 @@
           </li>
           <% }) %>
         </ul>
-        <form class="d-flex search-form" role="search">
-          <input class="form-control me-2" id="search-input" type="search" placeholder="Search" aria-label="Search">
+        <form class="d-flex align-items-end gap-2 search-form" role="search">
+          <!-- <input class="form-control me-2" id="search-input" type="search" placeholder="Search" aria-label="Search"> -->
+          <div>
+            <!-- <label for="searchInput" class="form-label">Search Users</label> -->
+            <input class="form-control" list="searchOptions" id="searchInput" placeholder="Type to search...">
+            <datalist id="searchOptions">
+              <option value="">
+            </datalist>
+          </div>
           <button class="btn btn-outline-primary search-btn" type="submit">Search</button>
         </form>
       </div>

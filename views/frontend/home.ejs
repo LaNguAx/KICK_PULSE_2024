@@ -17,6 +17,9 @@
 <body class="mb-5">
   <%- include('./components/preloader') %>
 
+  <%- include('./components/search-modal') %>
+
+
   <div class="content">
     <%- include('./components/header') %>
 
@@ -32,14 +35,20 @@
         <div class="text-center w-50 mx-auto">
           <h4 class="mb-3">Just Dropped</h4>
           <div class="gender-links d-flex justify-content-between mb-4 fs-5">
-            <a href="#" class="gender-link link-secondary text-decoration-none active" data-gender="men">Men</a>
-            <a href="#" class="gender-link link-secondary text-decoration-none" data-gender="women">Women</a>
-            <a href="#" class="gender-link link-secondary text-decoration-none" data-gender="kids">Kids</a>
+            <a href="#"
+              class="gender-link link-secondary link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover active"
+              data-gender="men">Men</a>
+            <a href="#"
+              class="gender-link link-secondary link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover"
+              data-gender="women">Women</a>
+            <a href="#"
+              class="gender-link link-secondary link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover"
+              data-gender="kids">Kids</a>
           </div>
         </div>
         <div
           class="recent-products row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 g-3 justify-content-center">
-          <% menProducts.splice(3); menProducts.forEach(product => { %>
+          <% menProducts.splice(4); menProducts.forEach(product => { %>
           <div class="col product-card" data-product-id="<%= product._id %>">
             <div class="card h-100">
               <button type="button" class="btn nav-link p-0 border-0 h-100 d-flex flex-column align-items-center"

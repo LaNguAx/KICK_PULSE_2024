@@ -39,8 +39,12 @@ class Search {
   handleSearchClick(e) {
     e.preventDefault();
 
-    if (this.products.length == 0)
+    if (this.products.length == 0 || this.searchInput.value.length == 0) {
+
+      Main.renderMessage(document.querySelector('#searchInput').parentElement, true, 'No products found..', 'afterbegin');
+      setTimeout(() => Main.renderMessage(document.querySelector('#searchInput').parentElement, false), 1000);
       return;
+    }
 
     this.searchModalObj.show();
 
@@ -96,50 +100,43 @@ class Search {
   async delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-
   renderSearchProducts(data, limit = 6) {
+    // Create a container for the recent products with Bootstrap grid layout
+    const recentProductsContainer = document.createElement('div');
+    recentProductsContainer.className = 'recent-products row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 g-3 justify-content-center';
 
     data.forEach((product, idx) => {
 
       if (idx >= limit) return;
 
       const productElement = document.createElement('div');
-      const subCategories = [];
-      product.category.subcategories.forEach((subcat) =>
-        subCategories.push(subcat.name)
-      );
-
-      // const response = await fetch('/api/products/');
-
-      productElement.className = 'col-md-4 col-sm-6 col-12 mb-4';
+      productElement.className = 'col product-card';
+      productElement.setAttribute('data-product-id', product._id);
       productElement.innerHTML = `
-        <div class="card position-relative" data-product-id="${product._id}">
-          <button type="button" class="btn btn-outline-danger delete-product">X</button>
-          <img src="${product.image}" class="card-img-top" alt="${product.name
-        }" />
-          <div class="card-body">
-            <h5 class="card-title">${product.name}</h5>
-            <p class="card-text">${product.description}</p>
-            <p class="card-text">Price: $${product.price}</p>
-            <p class="card-text">Sizes: ${product.sizes.join(', ')}</p>
-            <p class="card-text">Quantity: ${product.quantity}</p>
-            <p class="card-text">Supplier: ${product.supplier.name}</p>
-            <p class="card-text">Brand: ${product.brand.name}</p>
-            <p class="card-text">Category: ${product.category.name}</p>
-            <p class="card-text">
-                  Sub Categories: ${subCategories.length != 0 ? subCategories.join(', ') : ''
-        }
-                </p>
-            <p class="card-text">Gender: ${product.gender}</p>
-          </div>
-          <button type="button" class="btn btn-outline-secondary edit-product-btn">
-                <i class="bi bi-pencil-square"></i>
-                <span class="visually-hidden">Edit Category</span>
-              </button>
-        </div>`;
-      this.searchModalContent.appendChild(productElement);
+            <div class="card h-100">
+                <button type="button"
+                    class="btn nav-link p-0 border-0 h-100 d-flex flex-column align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#quick-view-modal">
+                    <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                        <div class="card-body text-center p-2 d-flex flex-column mt-auto">
+                            <h5 class="card-title flex-grow-1 d-flex align-items-center justify-content-center">
+                                ${product.name}</h5>
+                            <strong class="d-block mt-2">Quick View</strong>
+                        </div>
+                </button>
+            </div>
+           `;
+
+      recentProductsContainer.appendChild(productElement);
     });
+
+    // Clear existing content in the modal and append the recent products container
+    this.searchModalContent.innerHTML = '';
+    this.searchModalContent.appendChild(recentProductsContainer);
+    this.searchModal.querySelector('#numOfFoundProducts').innerHTML = `Number of found products: ${data.length}`;
   }
+
+
 
 }
 
