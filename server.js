@@ -63,7 +63,7 @@ app.listen(PORT, async () => {
   await connectToDb();
 });
 
-/* 
+/*
 PORT=3000
 MONGO_URI=mongodb+srv://itayakni:kick.pulse.c  s@cluster0.yl5rjk1.mongodb.net/kickpulse_2024?retryWrites=true&w=majority&appName=Cluster0
 */
@@ -72,7 +72,7 @@ MONGO_URI=mongodb+srv://itayakni:kick.pulse.c  s@cluster0.yl5rjk1.mongodb.net/ki
   1. search dashboard&client
   2. search users -
   3. GROUPBY orders locations countries -
-  4. dashboard login system - 
+  4. dashboard login system -
   5. canvas
   6. graphs -
   7. web service
