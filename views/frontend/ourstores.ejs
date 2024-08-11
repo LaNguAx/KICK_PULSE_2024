@@ -9,6 +9,8 @@
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" />
 
+  <script src="https://maps.googleapis.com/maps/api/js?key=<%= key %>&loading=async&libraries=maps&v=beta" defer>
+  </script>
   <link rel="stylesheet" href="/frontend/main.css">
   <link rel="stylesheet" href="/frontend/ourstores/stores.css">
   <title>KickPulse Stores</title>
@@ -24,10 +26,11 @@
         <div class="row mb-4">
           <div class="col text-center">
             <h1 class="display-4 fw-bold">Our Stores</h1>
-            <p class="lead">Visit our Kick Pulse stores located in prime locations across the country. Find the perfect pair of sneakers with personalized service and a vast selection.</p>
+            <p class="lead">Visit our Kick Pulse stores located in prime locations across the country. Find the perfect
+              pair of sneakers with personalized service and a vast selection.</p>
           </div>
         </div>
-        
+
         <div class="row">
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100 shadow-sm">
@@ -80,9 +83,14 @@
             </div>
           </div>
         </div>
+
+        <!-- <gmp-map id="map" center="37.4220656,-122.0840897" zoom="10" map-id="DEMO_MAP_ID" style="height: 400px">
+        </gmp-map> -->
+        <div id="map" style="height: 400px; width: 100%;"></div>
+
       </section>
     </main>
-    
+
     <%- include('./components/footer') %>
 
   </div>

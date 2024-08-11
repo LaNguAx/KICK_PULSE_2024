@@ -3,5 +3,5 @@ import CategoryService from "../../services/dashboard/category_service.js";
 export async function getIndex(req, res) {
   const categories = await CategoryService.getCategories();
 
-  res.render('../views/frontend/ourstores', { categories, session: req.session });
+  res.render('../views/frontend/ourstores', { categories, session: req.session, key: process.env.GOOGLE_MAPS_API_KEY });
 }
