@@ -10,6 +10,8 @@ class Checkout {
   checkoutCart;
   checkoutCartContainer;
   checkoutFieldsContainer;
+  shippingCost = 0;
+  shippingAdded = false;
 
   constructor() {
     this.checkoutCart = Cart.getCart();
@@ -26,6 +28,7 @@ class Checkout {
     this.checkoutCartContainer.addEventListener('click', this.handleCheckoutCartContainerClick.bind(this));
     this.checkoutForm.addEventListener('submit', this.handleCheckoutFormSubmit.bind(this));
     this.initCCfields();
+    this.initShippingOptions();
   }
 
   async loadCountriesSelect() {
@@ -134,13 +137,28 @@ class Checkout {
     this.checkoutCart = Cart.getCart();
     this.checkoutCartContainer.querySelector('.badge').innerText = this.checkoutCart.length;
 
+    const emptyCartMessage = this.checkoutCartContainer.querySelector('.empty-cart-message');
+
     if (this.checkoutCart.length == 0) {
-      table.parentElement.insertAdjacentHTML('beforebegin', `<p class="lean">Your cart is empty..</p>`);
+      if (!emptyCartMessage) {
+        table.parentElement.insertAdjacentHTML('beforebegin', `<p class="lean empty-cart-message">Your cart is empty..</p>`);
+      }
       this.checkoutCartContainer.querySelector('.cart-total').innerText = `$0.00`;
       return;
     }
 
-    let total = 0;
+    if (emptyCartMessage) {
+      emptyCartMessage.remove();
+    }
+
+    let total = this.checkoutCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    // Add shipping cost if not already added
+    if (this.shippingCost > 0 && !this.shippingAdded) {
+      total += this.shippingCost;
+      this.shippingAdded = true;
+    }
+
     this.checkoutCart.forEach(item => {
       table.insertAdjacentHTML('beforeend', `
         <tr data-product-id="${item._id}" data-product-quantity="${item.quantity}" data-product-size="${item.size}">
@@ -151,8 +169,6 @@ class Checkout {
           <td>${item.size}</td>
           <td><button type="button" class="btn btn-outline-danger btn-sm btn-checkout-delete-cart-item">&times;</button></td>
         </tr>`);
-
-      total += item.price * item.quantity;
     });
 
     const formattedTotal = total.toLocaleString('en-US', {
@@ -160,6 +176,17 @@ class Checkout {
       currency: 'USD',
     });
     this.checkoutCartContainer.parentElement.querySelector('.cart-total').innerText = formattedTotal;
+  }
+
+  initShippingOptions() {
+    document.getElementById('standardDelivery').addEventListener('change', this.updateShippingCost.bind(this, 9.99));
+    document.getElementById('expressDelivery').addEventListener('change', this.updateShippingCost.bind(this, 14.99));
+  }
+
+  updateShippingCost(cost) {
+    this.shippingCost = cost;
+    this.shippingAdded = false; // Reset to ensure it adds the cost only once
+    this.renderCheckoutCart(); // Re-render the cart with updated shipping cost
   }
 
   initCCfields() {
