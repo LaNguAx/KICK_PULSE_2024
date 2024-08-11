@@ -39,11 +39,10 @@ class Category {
   async handleApplyFiltersBtnClick(e) {
 
     this.filtersModalObj.hide();
-    console.log(this.products);
     const checkedFilters = [...document.querySelectorAll('.filter:checked')];
 
     Main.renderSpinner(this.categoryProductsContainer, true);
-    const response = await fetch(`/api/categories/products/${this.filtersModal.getAttribute('data-category-id')}`);
+    const response = await fetch(`/api/brands/products/${this.filtersModal.getAttribute('data-category-id')}`);
     if (!response.ok)
       throw new Error('Failed getting products for category');
     const result = await response.json();
@@ -57,9 +56,9 @@ class Category {
 
 
     // Filter and map the elements to get only the checked ones' ids
-    const brandFilters = new Set([...document.querySelectorAll('.filter-brand')]
-      .filter(el => el.checked)  // Only include checked elements
-      .map(el => el.id));        // Map to their ids
+    // const brandFilters = new Set([...document.querySelectorAll('.filter-brand')]
+    //   .filter(el => el.checked)  // Only include checked elements
+    //   .map(el => el.id));        // Map to their ids
 
     const genderFilters = new Set([...document.querySelectorAll('.filter-gender')]
       .filter(el => el.checked)  // Only include checked elements
@@ -70,9 +69,9 @@ class Category {
       .map(el => el.id));        // Map to their ids
 
     let filteredProducts = products;
-    if (brandFilters.size > 0)
-      filteredProducts = products.filter(product =>
-        brandFilters.has(product.brand.name));
+    // if (brandFilters.size > 0)
+    //   filteredProducts = products.filter(product =>
+    //     brandFilters.has(product.brand.name));
 
     if (genderFilters.size > 0)
       filteredProducts = filteredProducts.filter(product => genderFilters.has(product.gender));

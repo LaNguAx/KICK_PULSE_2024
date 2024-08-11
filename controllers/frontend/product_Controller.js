@@ -1,11 +1,15 @@
 
 import CategoryService from "../../services/dashboard/category_service.js";
 import ProductService from "../../services/dashboard/product_service.js";
+import BrandService from '../../services/dashboard/brand_service.js';
+
 export async function getIndex(req, res) {
   const { name } = req.params;
   try {
     const categories = await CategoryService.getCategories();
-
+    const brandNames = await BrandService.getBrands();
+    categories.brandNames = brandNames;
+    
     const product = await ProductService.getProductByName(name);
 
     res.render('../views/frontend/product', {

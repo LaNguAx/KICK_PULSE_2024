@@ -58,6 +58,23 @@
             </ul>
           </li>
           <% }) %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Brands
+            </a>
+            <ul class="dropdown-menu">
+              <% categories.brandNames.forEach((category, index) => { %>
+              <li><a class="dropdown-item" href="/brand/<%= category.name.toLowerCase() %>"><%= category.name %></a>
+              </li>
+              <% if (index < categories.brandNames.length - 1) { %>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <% } %>
+              <% }) %>
+            </ul>
+          </li>
+
         </ul>
         <form class="d-flex align-items-end gap-2 search-form" role="search">
           <!-- <input class="form-control me-2" id="search-input" type="search" placeholder="Search" aria-label="Search"> -->
