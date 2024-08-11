@@ -17,7 +17,7 @@ import { getIndex as getAccessibilityIndex } from '../../controllers/frontend/ac
 
 import { getIndex as getAboutIndex } from '../../controllers/frontend/aboutus_Controller.js';
 
-import { getIndex as getCategoryIndex, categoryMiddleware, getSubCategoryIndex } from '../../controllers/frontend/category_Controller.js';
+import { getIndex as getCategoryIndex, categoryMiddleware, getSubCategoryIndex, getBrandIndex } from '../../controllers/frontend/category_Controller.js';
 import { getIndex as getProductIndex, productMiddleware } from '../../controllers/frontend/product_Controller.js';
 import { getIndex as get404Index } from '../../controllers/frontend/404_Controller.js';
 
@@ -51,7 +51,7 @@ router.route('/about-us').get(getAboutIndex);
 router.route('/category/id/:id').get(categoryMiddleware);
 router.route('/category/:name').get(getCategoryIndex);
 router.route('/category/:category/:subcategory').get(getSubCategoryIndex);
-
+router.route('/brand/:name').get(getBrandIndex);
 
 router.route('/product/id/:id').get(productMiddleware);
 router.route('/product/:name').get(getProductIndex);

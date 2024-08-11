@@ -21,6 +21,7 @@ import {
   deleteBrand,
   getBrand,
   getBrands,
+  getProductsByBrandName,
 } from './brands_api.js';
 
 import {
@@ -65,7 +66,7 @@ router.route('/suppliers/:id/brands').get(getSupplierBrands);
 
 router.route('/brands').get(getBrands).post(isAdmin, createBrand);
 router.route('/brands/:id').get(getBrand).put(isAdmin, updateBrand).delete(isAdmin, deleteBrand);
-
+router.route('/brands/products/:name').get(getProductsByBrandName)
 
 router.route('/categories').get(getCategories).post(isAdmin, createCategory);
 router.route('/categories/:id').get(getCategory).delete(isAdmin, deleteCategory).put(isAdmin, updateCategory);

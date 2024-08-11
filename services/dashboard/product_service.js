@@ -249,11 +249,28 @@ const updateProduct = async (updatedProduct, prodId) => {
 
 }
 
+const getProductsByBrandName = async (brandName) => {
+  try {
+    console.log(brandName)
+    const products = await ProductsModel.find({
+      'brand.name': new RegExp('^' + brandName + '$', 'i') // Case-insensitive search for brand name
+    });
+
+    if (products.length === 0) throw new Error('No products found for the specified brand');
+
+    return products;
+  } catch (err) {
+    console.error(`Error finding products for brand name ${brandName}:`, err);
+    throw new Error('Failed to retrieve products');
+  }
+};
+
 export default {
   getProducts,
   getProduct,
   getProductsByCategoryId,
   getProductByName,
+  getProductsByBrandName,
   createProduct,
   deleteProduct,
   deleteProductsBySupplierId,
