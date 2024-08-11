@@ -440,7 +440,7 @@ class Users {
         <td>${user.lastName}</td>
         <td>${user.email}</td>
         <td>${user.orders.length} orders</td>
-        <td>${user.role || 'User'}</td>
+        <td>${user.role ? 'Admin' : 'User'}</td>
         <td>
           <button class="btn btn-info btn-sm view-orders-btn" data-user-id="${user._id}">View Orders</button>
           <button class="btn btn-warning btn-sm change-role-btn" data-user-id="${user._id}">Change Role</button>
@@ -457,8 +457,6 @@ class Users {
     // Append the table to the modal content
     this.searchModalContent.appendChild(table);
   }
-
-
 
 
 

@@ -9,7 +9,7 @@ import { brandsIndex } from '../controllers/dashboard/brands_controller.js';
 import { ordersIndex } from '../controllers/dashboard/orders_controller.js';
 import { categoriesIndex } from '../controllers/dashboard/categories_controller.js';
 import { analyticsIndex } from '../controllers/dashboard/analytics_controller.js';
-
+import { facebookIndex } from '../controllers/dashboard/facebook_controller.js';
 const router = express.Router();
 
 // redirect admin to products temporarily until admin login
@@ -30,4 +30,5 @@ router.route('/brands').get(isAdmin, brandsIndex);
 
 router.route('/analytics').get(isAdmin, analyticsIndex)
 
+router.route('/facebook').get(isAdmin, facebookIndex);
 export default router;
